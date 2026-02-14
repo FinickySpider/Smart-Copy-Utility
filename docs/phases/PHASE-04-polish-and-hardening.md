@@ -1,7 +1,7 @@
 ---
 id: PHASE-04
 type: phase
-status: planned
+status: complete
 owner: ""
 ---
 
@@ -26,11 +26,11 @@ Implement remaining features (root-rules-only mode), add safety checks, polish t
 - Auto rule generation
 
 ## Sprints
-- (created when Phase 4 becomes active)
+- [SPRINT-04](../sprints/SPRINT-04.md) — complete
 
 ## Completion Criteria
-- [ ] Root-rules-only toggle ignores nested rule files
-- [ ] Source/destination safety checks prevent recursion hazards
-- [ ] All error states handled gracefully with user-facing messages
-- [ ] Full test matrix from design document passes
-- [ ] README.md complete with usage instructions and rule file examples
+- [x] Root-rules-only toggle ignores nested rule files
+- [x] Source/destination safety checks prevent recursion hazards
+- [x] All error states handled gracefully with user-facing messages
+- [x] Full test matrix from design document passes
+- [x] README.md complete with usage instructions and rule file examples

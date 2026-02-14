@@ -23,6 +23,7 @@ export function MainScreen(): React.ReactElement {
   const [currentJob, setCurrentJob] = useState(0);
   const [totalJobs, setTotalJobs] = useState(0);
   const [dryRunReport, setDryRunReport] = useState<any>(null);
+  const [rootOnly, setRootOnly] = useState(false);
 
   // Set up copy event listeners
   React.useEffect(() => {
@@ -54,7 +55,13 @@ export function MainScreen(): React.ReactElement {
     });
 
     const unsubError = window.electronAPI.onCopyError((data: any) => {
-      setLogs((prev) => [...prev, `\n[ERROR] ${data.error}`]);
+      const errorMsg = data.error || 'Unknown error occurred';
+      setLogs((prev) => [
+        ...prev,
+        '\n=== ERROR ===',
+        errorMsg,
+        '=============',
+      ]);
     });
 
     return () => {
@@ -66,6 +73,23 @@ export function MainScreen(): React.ReactElement {
       unsubError();
     };
   }, []);
+
+  // Helper to extract clean error message
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return String(error);
+  };
+
+  // Reset operation state (for retry after error)
+  const handleReset = () => {
+    setCopyStatus('idle');
+    setLogs([]);
+    setCurrentJob(0);
+    setTotalJobs(0);
+    setDryRunReport(null);
+  };
 
   const handleSelectFolder = async (kind: 'source' | 'destination') => {
     const result = await window.electronAPI.selectFolder({ kind });
@@ -87,23 +111,21 @@ export function MainScreen(): React.ReactElement {
     if (!sourcePath || !destPath) return;
 
     setScanning(true);
+    setErrorMessage(null); // Clear previous errors
     try {
       const result = await window.electronAPI.scan({
         source: sourcePath,
         dest: destPath,
-        rootOnly: false,
+        rootOnly,
       });
       setScanResult(result);
       setSelectedNode(null);
       // Reset copy state
-      setLogs([]);
-      setCurrentJob(0);
-      setTotalJobs(0);
-      setDryRunReport(null);
-      setCopyStatus('idle');
+      handleReset();
     } catch (error) {
       console.error('Scan failed:', error);
-      setErrorMessage('Failed to scan source directory.');
+      const errorMsg = getErrorMessage(error);
+      setErrorMessage(`Scan failed: ${errorMsg}`);
     } finally {
       setScanning(false);
     }
@@ -118,7 +140,7 @@ export function MainScreen(): React.ReactElement {
     try {
       const result = await window.electronAPI.dryRun({
         scanId: scanResult.scanId,
-        rootOnly: false,
+        rootOnly,
       });
 
       if (result.success && result.report) {
@@ -133,12 +155,25 @@ export function MainScreen(): React.ReactElement {
           `Valid plan: ${report.validPlan ? 'Yes' : 'No'}`,
         ]);
       } else {
-        setLogs((prev) => [...prev, `Dry run failed: ${result.error}`]);
+        const errorMsg = result.error || 'Unknown error';
+        setLogs((prev) => [
+          ...prev,
+          '\n=== Dry Run Failed ===',
+          errorMsg,
+          '=====================',
+        ]);
       }
 
       setCopyStatus('idle');
     } catch (error) {
-      setLogs((prev) => [...prev, `Dry run error: ${error}`]);
+      console.error('Dry run error:', error);
+      const errorMsg = getErrorMessage(error);
+      setLogs((prev) => [
+        ...prev,
+        '\n=== Dry Run Error ===',
+        errorMsg,
+        '====================',
+      ]);
       setCopyStatus('error');
     }
   };
@@ -153,15 +188,28 @@ export function MainScreen(): React.ReactElement {
     try {
       const result = await window.electronAPI.copy({
         scanId: scanResult.scanId,
-        rootOnly: false,
+        rootOnly,
       });
 
       if (!result.success) {
-        setLogs((prev) => [...prev, `Copy failed: ${result.error}`]);
+        const errorMsg = result.error || 'Copy operation failed';
+        setLogs((prev) => [
+          ...prev,
+          '\n=== Copy Failed ===',
+          errorMsg,
+          '==================',
+        ]);
         setCopyStatus('error');
       }
     } catch (error) {
-      setLogs((prev) => [...prev, `Copy error: ${error}`]);
+      console.error('Copy error:', error);
+      const errorMsg = getErrorMessage(error);
+      setLogs((prev) => [
+        ...prev,
+        '\n=== Copy Error ===',
+        errorMsg,
+        '==================',
+      ]);
       setCopyStatus('error');
     }
   };
@@ -169,10 +217,35 @@ export function MainScreen(): React.ReactElement {
   const handleCancel = async () => {
     try {
       await window.electronAPI.cancel();
-      setLogs((prev) => [...prev, 'Cancelling...']);
+      setLogs((prev) => [...prev, 'Cancellation requested...']);
     } catch (error) {
       console.error('Cancel failed:', error);
+      const errorMsg = getErrorMessage(error);
+      setLogs((prev) => [...prev, `Cancel failed: ${errorMsg}`]);
     }
+  };
+
+  // Helper function to check if childPath is inside parentPath
+  const isPathInside = (childPath: string | null, parentPath: string | null): boolean => {
+    if (!childPath || !parentPath) return false;
+    
+    // Normalize paths: remove trailing slashes and convert to lowercase (Windows is case-insensitive)
+    const normalizePathString = (p: string): string => {
+      let normalized = p.replace(/[/\\]+$/, ''); // Remove trailing slashes
+      normalized = normalized.toLowerCase(); // Case-insensitive comparison
+      // Ensure consistent separator
+      normalized = normalized.replace(/\\/g, '/');
+      return normalized;
+    };
+
+    const normalizedChild = normalizePathString(childPath);
+    const normalizedParent = normalizePathString(parentPath);
+
+    // Check if child starts with parent followed by a separator
+    return (
+      normalizedChild.startsWith(normalizedParent + '/') ||
+      normalizedChild.startsWith(normalizedParent + '\\')
+    );
   };
 
   // Check if source and destination are the same
@@ -181,6 +254,12 @@ export function MainScreen(): React.ReactElement {
     destPath !== null &&
     sourcePath.toLowerCase() === destPath.toLowerCase();
 
+  // Check if destination is inside source (would cause recursion)
+  const isDestInsideSource = isPathInside(destPath, sourcePath);
+
+  // Check if source is inside destination (would overwrite source)
+  const isSourceInsideDest = isPathInside(sourcePath, destPath);
+
   // Check if paths are missing
   const isSourceMissing = sourcePath === null;
   const isDestMissing = destPath === null;
@@ -188,8 +267,13 @@ export function MainScreen(): React.ReactElement {
   // Check if conflicts exist
   const hasConflicts = scanResult ? scanResult.conflicts.length > 0 : false;
 
-  // Actions are disabled when paths are missing or same folder error
-  const actionsDisabled = isSourceMissing || isDestMissing || hasSameFolderError;
+  // Actions are disabled when paths are missing or any path error
+  const actionsDisabled = 
+    isSourceMissing || 
+    isDestMissing || 
+    hasSameFolderError || 
+    isDestInsideSource || 
+    isSourceInsideDest;
 
   // Dry Run and Copy are additionally disabled when conflicts exist
   const dryRunCopyDisabled = actionsDisabled || hasConflicts;
@@ -203,6 +287,14 @@ export function MainScreen(): React.ReactElement {
       setErrorMessage(
         'Error: Source and destination must be different folders.'
       );
+    } else if (isDestInsideSource) {
+      setErrorMessage(
+        'Error: Destination cannot be inside source folder (would cause recursion).'
+      );
+    } else if (isSourceInsideDest) {
+      setErrorMessage(
+        'Error: Source cannot be inside destination folder (would overwrite source).'
+      );
     } else if (isSourceMissing && isDestMissing) {
       setErrorMessage('Please select both source and destination folders.');
     } else if (isSourceMissing) {
@@ -212,7 +304,7 @@ export function MainScreen(): React.ReactElement {
     } else {
       setErrorMessage(null);
     }
-  }, [sourcePath, destPath, hasSameFolderError, isSourceMissing, isDestMissing]);
+  }, [sourcePath, destPath, hasSameFolderError, isDestInsideSource, isSourceInsideDest, isSourceMissing, isDestMissing]);
 
   return (
     <div
@@ -233,15 +325,42 @@ export function MainScreen(): React.ReactElement {
           kind="source"
           path={sourcePath}
           onSelect={handleSelectFolder}
-          hasError={hasSameFolderError}
+          hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
         />
         <FolderPicker
           label="Destination Folder"
           kind="destination"
           path={destPath}
           onSelect={handleSelectFolder}
-          hasError={hasSameFolderError}
+          hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
         />
+      </div>
+
+      {/* Root-Only Mode Toggle */}
+      <div style={{ marginBottom: '24px' }}>
+        <label
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '14px',
+            cursor: 'pointer',
+            userSelect: 'none',
+          }}
+          title="When enabled, only .copyignore/.copyinclude files at the source root are applied. Nested rule files are ignored."
+        >
+          <input
+            type="checkbox"
+            checked={rootOnly}
+            onChange={(e) => setRootOnly(e.target.checked)}
+            style={{
+              marginRight: '8px',
+              width: '16px',
+              height: '16px',
+              cursor: 'pointer',
+            }}
+          />
+          <span>Root rules only (ignore nested rule files)</span>
+        </label>
       </div>
 
       {/* Error/Info Message */}
@@ -250,10 +369,10 @@ export function MainScreen(): React.ReactElement {
           style={{
             padding: '12px 16px',
             marginBottom: '24px',
-            backgroundColor: hasSameFolderError ? '#fee' : '#f0f8ff',
-            border: `1px solid ${hasSameFolderError ? '#e74c3c' : '#3498db'}`,
+            backgroundColor: actionsDisabled ? '#fee' : '#f0f8ff',
+            border: `1px solid ${actionsDisabled ? '#e74c3c' : '#3498db'}`,
             borderRadius: '4px',
-            color: hasSameFolderError ? '#c0392b' : '#2980b9',
+            color: actionsDisabled ? '#c0392b' : '#2980b9',
             fontSize: '14px',
           }}
         >
@@ -333,7 +452,45 @@ export function MainScreen(): React.ReactElement {
         >
           Cancel
         </button>
+        {copyStatus === 'error' && (
+          <button
+            onClick={handleReset}
+            style={{
+              padding: '10px 20px',
+              fontSize: '14px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              borderRadius: '4px',
+              border: 'none',
+              backgroundColor: '#f39c12',
+              color: '#fff',
+            }}
+          >
+            Reset
+          </button>
+        )}
       </div>
+
+      {/* Error Summary Banner */}
+      {copyStatus === 'error' && (
+        <div
+          style={{
+            padding: '16px',
+            marginBottom: '24px',
+            backgroundColor: '#fee',
+            border: '2px solid #e74c3c',
+            borderRadius: '4px',
+            color: '#c0392b',
+          }}
+        >
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600 }}>
+            ⚠️ Operation Failed
+          </h3>
+          <p style={{ margin: 0, fontSize: '14px' }}>
+            The operation encountered an error. Check the log below for details. Click "Reset" to clear the error and try again.
+          </p>
+        </div>
+      )}
 
       {/* Progress Bar */}
       {copyStatus !== 'idle' && (
