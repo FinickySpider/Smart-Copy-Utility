@@ -19,15 +19,15 @@ export function ProgressBar({
   const getStatusColor = () => {
     switch (status) {
       case 'copying':
-        return '#3498db';
+        return 'var(--button-preview)';
       case 'done':
-        return '#27ae60';
+        return 'var(--button-copy)';
       case 'error':
-        return '#e74c3c';
+        return 'var(--button-cancel)';
       case 'cancelled':
-        return '#95a5a6';
+        return 'var(--button-dryrun)';
       default:
-        return '#95a5a6';
+        return 'var(--button-dryrun)';
     }
   };
 
@@ -63,7 +63,7 @@ export function ProgressBar({
           marginBottom: '8px',
           fontSize: '14px',
           fontWeight: 500,
-          color: '#333',
+          color: 'var(--text-primary)',
         }}
       >
         <span>{getStatusText()}</span>
@@ -75,10 +75,10 @@ export function ProgressBar({
         style={{
           width: '100%',
           height: '24px',
-          backgroundColor: '#e9ecef',
+          backgroundColor: 'var(--bg-secondary)',
           borderRadius: '4px',
           overflow: 'hidden',
-          border: '1px solid #ced4da',
+          border: '1px solid var(--border-color)',
         }}
       >
         <div
@@ -90,7 +90,7 @@ export function ProgressBar({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#fff',
+            color: 'var(--button-text)',
             fontSize: '12px',
             fontWeight: 600,
           }}

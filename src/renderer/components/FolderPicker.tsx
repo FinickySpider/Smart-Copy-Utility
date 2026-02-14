@@ -17,7 +17,7 @@ export function FolderPicker({
 }: FolderPickerProps): React.ReactElement {
   return (
     <div style={{ marginBottom: '16px' }}>
-      <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+      <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
         {label}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -28,8 +28,9 @@ export function FolderPicker({
             fontSize: '14px',
             cursor: 'pointer',
             borderRadius: '4px',
-            border: '1px solid #ccc',
-            backgroundColor: '#f5f5f5',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
           }}
         >
           Select Folder
@@ -37,10 +38,10 @@ export function FolderPicker({
         <span
           style={{
             fontSize: '14px',
-            color: path ? '#333' : '#999',
+            color: path ? 'var(--text-primary)' : 'var(--text-tertiary)',
             fontFamily: 'Consolas, monospace',
-            border: hasError ? '1px solid #e74c3c' : 'none',
-            backgroundColor: hasError ? '#fee' : 'transparent',
+            border: hasError ? '1px solid var(--error-border)' : 'none',
+            backgroundColor: hasError ? 'var(--error-bg)' : 'transparent',
             padding: hasError ? '4px 8px' : '0',
             borderRadius: hasError ? '4px' : '0',
           }}

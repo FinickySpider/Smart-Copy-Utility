@@ -5,6 +5,7 @@ import { ExplainPanel } from './ExplainPanel';
 import { ConflictBanner } from './ConflictBanner';
 import { LogPanel } from './LogPanel';
 import { ProgressBar } from './ProgressBar';
+import { ThemeToggle } from './ThemeToggle';
 
 export function MainScreen(): React.ReactElement {
   const [sourcePath, setSourcePath] = useState<string | null>(null);
@@ -312,9 +313,12 @@ export function MainScreen(): React.ReactElement {
         padding: '24px',
         fontFamily: 'Segoe UI, sans-serif',
         maxWidth: '1400px',
+        backgroundColor: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
       }}
     >
-      <h1 style={{ marginBottom: '24px', fontSize: '24px', fontWeight: 600 }}>
+      <ThemeToggle />
+      <h1 style={{ marginBottom: '24px', fontSize: '24px', fontWeight: 600, color: 'var(--text-primary)' }}>
         Smart Copy Utility
       </h1>
 
@@ -369,10 +373,10 @@ export function MainScreen(): React.ReactElement {
           style={{
             padding: '12px 16px',
             marginBottom: '24px',
-            backgroundColor: actionsDisabled ? '#fee' : '#f0f8ff',
-            border: `1px solid ${actionsDisabled ? '#e74c3c' : '#3498db'}`,
+            backgroundColor: actionsDisabled ? 'var(--error-bg)' : 'var(--success-bg)',
+            border: `1px solid ${actionsDisabled ? 'var(--error-border)' : 'var(--success-border)'}`,
             borderRadius: '4px',
-            color: actionsDisabled ? '#c0392b' : '#2980b9',
+            color: actionsDisabled ? 'var(--error-text)' : 'var(--success-text)',
             fontSize: '14px',
           }}
         >
@@ -392,8 +396,8 @@ export function MainScreen(): React.ReactElement {
             cursor: actionsDisabled || scanning ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: actionsDisabled || scanning ? '#ccc' : '#3498db',
-            color: actionsDisabled || scanning ? '#666' : '#fff',
+            backgroundColor: actionsDisabled || scanning ? 'var(--button-disabled)' : 'var(--button-preview)',
+            color: 'var(--button-text)',
             opacity: actionsDisabled || scanning ? 0.6 : 1,
           }}
         >
@@ -409,8 +413,8 @@ export function MainScreen(): React.ReactElement {
             cursor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? '#ccc' : '#95a5a6',
-            color: dryRunCopyDisabled || copyStatus !== 'idle' ? '#666' : '#fff',
+            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'var(--button-disabled)' : 'var(--button-dryrun)',
+            color: 'var(--button-text)',
             opacity: dryRunCopyDisabled || copyStatus !== 'idle' ? 0.6 : 1,
           }}
           title={hasConflicts ? 'Resolve conflicts before running Dry Run' : ''}
@@ -427,8 +431,8 @@ export function MainScreen(): React.ReactElement {
             cursor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? '#ccc' : '#27ae60',
-            color: dryRunCopyDisabled || copyStatus !== 'idle' ? '#666' : '#fff',
+            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'var(--button-disabled)' : 'var(--button-copy)',
+            color: 'var(--button-text)',
             opacity: dryRunCopyDisabled || copyStatus !== 'idle' ? 0.6 : 1,
           }}
           title={hasConflicts ? 'Resolve conflicts before running Copy' : ''}
@@ -445,8 +449,8 @@ export function MainScreen(): React.ReactElement {
             cursor: !canCancel ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: !canCancel ? '#ccc' : '#e74c3c',
-            color: !canCancel ? '#666' : '#fff',
+            backgroundColor: !canCancel ? 'var(--button-disabled)' : 'var(--button-cancel)',
+            color: 'var(--button-text)',
             opacity: !canCancel ? 0.6 : 1,
           }}
         >
@@ -462,8 +466,8 @@ export function MainScreen(): React.ReactElement {
               cursor: 'pointer',
               borderRadius: '4px',
               border: 'none',
-              backgroundColor: '#f39c12',
-              color: '#fff',
+              backgroundColor: 'var(--button-reset)',
+              color: 'var(--button-text)',
             }}
           >
             Reset
@@ -477,10 +481,10 @@ export function MainScreen(): React.ReactElement {
           style={{
             padding: '16px',
             marginBottom: '24px',
-            backgroundColor: '#fee',
-            border: '2px solid #e74c3c',
+            backgroundColor: 'var(--error-bg)',
+            border: '2px solid var(--error-border)',
             borderRadius: '4px',
-            color: '#c0392b',
+            color: 'var(--error-text)',
           }}
         >
           <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: 600 }}>
@@ -504,7 +508,7 @@ export function MainScreen(): React.ReactElement {
       {/* Log Panel */}
       {logs.length > 0 && (
         <div style={{ marginBottom: '24px' }}>
-          <h3 style={{ marginBottom: '12px', fontSize: '16px', fontWeight: 600 }}>
+          <h3 style={{ marginBottom: '12px', fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
             Operation Log
           </h3>
           <LogPanel logs={logs} />
@@ -516,7 +520,7 @@ export function MainScreen(): React.ReactElement {
 
       {/* Scan Statistics */}
       {scanResult && (
-        <div style={{ marginBottom: '16px', fontSize: '14px', color: '#555' }}>
+        <div style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-secondary)' }}>
           <strong>Scan Complete:</strong> {scanResult.stats.directoriesScanned}{' '}
           directories scanned, {scanResult.stats.ruleFilesFound} rule files found,{' '}
           {scanResult.stats.conflictsFound} conflicts detected.

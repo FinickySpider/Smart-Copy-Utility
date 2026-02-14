@@ -64,13 +64,13 @@ export function TreeNode({
   const getStateColor = (): string => {
     switch (node.state) {
       case 'INCLUDED':
-        return '#27ae60';
+        return 'var(--tree-included)';
       case 'EXCLUDED':
-        return '#95a5a6';
+        return 'var(--tree-excluded)';
       case 'CONFLICT':
-        return '#e74c3c';
+        return 'var(--tree-conflict)';
       default:
-        return '#333';
+        return 'var(--text-primary)';
     }
   };
 
@@ -96,7 +96,7 @@ export function TreeNode({
           alignItems: 'center',
           padding: '4px 8px',
           cursor: 'pointer',
-          backgroundColor: selected ? '#e3f2fd' : 'transparent',
+          backgroundColor: selected ? 'var(--bg-hover)' : 'transparent',
           borderRadius: '4px',
         }}
         onClick={handleClick}
@@ -138,7 +138,7 @@ export function TreeNode({
         <span
           style={{
             fontSize: '14px',
-            color: node.state === 'EXCLUDED' ? '#95a5a6' : '#333',
+            color: node.state === 'EXCLUDED' ? 'var(--tree-excluded)' : 'var(--text-primary)',
             fontFamily: 'Segoe UI, sans-serif',
           }}
         >

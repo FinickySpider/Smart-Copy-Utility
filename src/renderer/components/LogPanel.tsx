@@ -22,11 +22,11 @@ export function LogPanel({ logs }: LogPanelProps): React.ReactElement {
       <div
         style={{
           padding: '16px',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #dee2e6',
+          backgroundColor: 'var(--bg-secondary)',
+          border: '1px solid var(--border-color)',
           borderRadius: '4px',
           fontSize: '14px',
-          color: '#6c757d',
+          color: 'var(--text-secondary)',
           textAlign: 'center',
         }}
       >
@@ -40,12 +40,12 @@ export function LogPanel({ logs }: LogPanelProps): React.ReactElement {
       ref={logContainerRef}
       style={{
         padding: '12px',
-        backgroundColor: '#1e1e1e',
-        border: '1px solid #444',
+        backgroundColor: 'var(--bg-tertiary)',
+        border: '1px solid var(--border-color)',
         borderRadius: '4px',
         fontSize: '13px',
         fontFamily: 'Consolas, Monaco, monospace',
-        color: '#d4d4d4',
+        color: 'var(--text-primary)',
         maxHeight: '300px',
         overflowY: 'auto',
         whiteSpace: 'pre-wrap',

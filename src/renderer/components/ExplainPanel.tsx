@@ -64,17 +64,17 @@ export function ExplainPanel({
     return (
       <div
         style={{
-          border: '1px solid #ddd',
+          border: '1px solid var(--border-color)',
           borderRadius: '4px',
           padding: '16px',
-          backgroundColor: '#fafafa',
+          backgroundColor: 'var(--bg-secondary)',
           fontFamily: 'Segoe UI, sans-serif',
         }}
       >
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
           Explain Decision
         </h3>
-        <p style={{ marginTop: '12px', fontSize: '14px', color: '#999' }}>
+        <p style={{ marginTop: '12px', fontSize: '14px', color: 'var(--text-tertiary)' }}>
           Select a file or folder in the tree to see why it was included or excluded.
         </p>
       </div>
@@ -85,17 +85,17 @@ export function ExplainPanel({
     return (
       <div
         style={{
-          border: '1px solid #ddd',
+          border: '1px solid var(--border-color)',
           borderRadius: '4px',
           padding: '16px',
-          backgroundColor: '#fafafa',
+          backgroundColor: 'var(--bg-secondary)',
           fontFamily: 'Segoe UI, sans-serif',
         }}
       >
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
           Explain Decision
         </h3>
-        <p style={{ marginTop: '12px', fontSize: '14px', color: '#999' }}>
+        <p style={{ marginTop: '12px', fontSize: '14px', color: 'var(--text-tertiary)' }}>
           Loading...
         </p>
       </div>
@@ -105,13 +105,13 @@ export function ExplainPanel({
   const getDecisionColor = (): string => {
     switch (explainData.decision) {
       case 'INCLUDED':
-        return '#27ae60';
+        return 'var(--tree-included)';
       case 'EXCLUDED':
-        return '#95a5a6';
+        return 'var(--tree-excluded)';
       case 'CONFLICT':
-        return '#e74c3c';
+        return 'var(--tree-conflict)';
       default:
-        return '#333';
+        return 'var(--text-primary)';
     }
   };
 
@@ -131,10 +131,10 @@ export function ExplainPanel({
   return (
     <div
       style={{
-        border: '1px solid #ddd',
+        border: '1px solid var(--border-color)',
         borderRadius: '4px',
         padding: '16px',
-        backgroundColor: '#fafafa',
+        backgroundColor: 'var(--bg-secondary)',
         fontFamily: 'Segoe UI, sans-serif',
       }}
     >
@@ -144,17 +144,18 @@ export function ExplainPanel({
 
       {/* Path */}
       <div style={{ marginBottom: '12px' }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           Path
         </div>
         <div
           style={{
             fontSize: '14px',
             fontFamily: 'Consolas, monospace',
-            backgroundColor: '#fff',
+            backgroundColor: 'var(--bg-primary)',
             padding: '8px',
             borderRadius: '4px',
-            border: '1px solid #ddd',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-primary)',
           }}
         >
           {explainData.path}
@@ -167,8 +168,9 @@ export function ExplainPanel({
             fontSize: '12px',
             cursor: 'pointer',
             borderRadius: '4px',
-            border: '1px solid #ccc',
-            backgroundColor: '#f5f5f5',
+            border: '1px solid var(--border-color)',
+            backgroundColor: 'var(--button-bg)',
+            color: 'var(--text-primary)',
           }}
         >
           Copy Path
@@ -177,7 +179,7 @@ export function ExplainPanel({
 
       {/* Decision */}
       <div style={{ marginBottom: '12px' }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           Decision
         </div>
         <div
@@ -193,16 +195,16 @@ export function ExplainPanel({
 
       {/* Mode */}
       <div style={{ marginBottom: '12px' }}>
-        <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           Active Mode
         </div>
-        <div style={{ fontSize: '14px' }}>{explainData.mode}</div>
+        <div style={{ fontSize: '14px', color: 'var(--text-primary)' }}>{explainData.mode}</div>
       </div>
 
       {/* Rule Chain */}
       {explainData.ruleChain.length > 0 && (
         <div style={{ marginBottom: '12px' }}>
-          <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             Rule File Chain
           </div>
           <div style={{ fontSize: '14px' }}>
@@ -212,11 +214,12 @@ export function ExplainPanel({
                 style={{
                   marginBottom: '6px',
                   padding: '6px',
-                  backgroundColor: '#fff',
+                  backgroundColor: 'var(--bg-primary)',
                   borderRadius: '4px',
-                  border: '1px solid #ddd',
+                  border: '1px solid var(--border-color)',
                   fontFamily: 'Consolas, monospace',
                   fontSize: '12px',
+                  color: 'var(--text-primary)',
                 }}
               >
                 <div>{rulePath}</div>
@@ -228,8 +231,9 @@ export function ExplainPanel({
                     fontSize: '11px',
                     cursor: 'pointer',
                     borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    backgroundColor: '#f5f5f5',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: 'var(--button-bg)',
+                    color: 'var(--text-primary)',
                   }}
                 >
                   Open in Explorer
@@ -243,7 +247,7 @@ export function ExplainPanel({
       {/* Matching Patterns */}
       {explainData.matchingPatterns.length > 0 && (
         <div style={{ marginBottom: '12px' }}>
-          <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             Matching Patterns
           </div>
           <div style={{ fontSize: '14px' }}>
@@ -253,9 +257,9 @@ export function ExplainPanel({
                 style={{
                   marginBottom: '8px',
                   padding: '8px',
-                  backgroundColor: '#fff',
+                  backgroundColor: 'var(--bg-primary)',
                   borderRadius: '4px',
-                  border: '1px solid #ddd',
+                  border: '1px solid var(--border-color)',
                 }}
               >
                 <div
@@ -264,11 +268,12 @@ export function ExplainPanel({
                     fontSize: '13px',
                     marginBottom: '4px',
                     fontWeight: 600,
+                    color: 'var(--text-primary)',
                   }}
                 >
                   {pattern.patternText}
                 </div>
-                <div style={{ fontSize: '11px', color: '#666' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                   {pattern.ruleFilePath} : line {pattern.lineNumber}
                 </div>
               </div>
@@ -278,7 +283,7 @@ export function ExplainPanel({
       )}
 
       {explainData.matchingPatterns.length === 0 && explainData.mode !== 'NONE' && (
-        <div style={{ fontSize: '12px', color: '#999', fontStyle: 'italic' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic', opacity: 0.7 }}>
           No patterns matched this file.
         </div>
       )}

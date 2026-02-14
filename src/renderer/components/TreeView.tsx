@@ -34,10 +34,10 @@ export function TreeView({
   return (
     <div
       style={{
-        border: '1px solid #ddd',
+        border: '1px solid var(--border-color)',
         borderRadius: '4px',
         padding: '16px',
-        backgroundColor: '#fafafa',
+        backgroundColor: 'var(--bg-secondary)',
         fontFamily: 'Segoe UI, sans-serif',
       }}
     >
@@ -49,13 +49,13 @@ export function TreeView({
           alignItems: 'center',
           marginBottom: '16px',
           paddingBottom: '12px',
-          borderBottom: '1px solid #ddd',
+          borderBottom: '1px solid var(--border-color)',
         }}
       >
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>
           Preview Tree
         </h3>
-        <label style={{ display: 'flex', alignItems: 'center', fontSize: '14px' }}>
+        <label style={{ display: 'flex', alignItems: 'center', fontSize: '14px', color: 'var(--text-primary)' }}>
           <input
             type="checkbox"
             checked={showExcluded}
