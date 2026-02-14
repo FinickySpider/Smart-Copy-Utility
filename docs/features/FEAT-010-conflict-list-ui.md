@@ -1,7 +1,7 @@
 ---
 id: FEAT-010
 type: feature
-status: planned
+status: complete
 priority: high
 phase: PHASE-02
 sprint: SPRINT-02
@@ -15,12 +15,12 @@ depends_on: [FEAT-007]
 Display detected conflicts prominently in the UI. When conflicts exist, show a banner/panel listing all directories with both `.copyignore` and `.copyinclude`. Each conflict entry has "Open in Explorer" and "Copy path" actions. Dry Run and Copy buttons are disabled when conflicts exist.
 
 ## Acceptance Criteria
-- [ ] Conflicts displayed prominently as a banner or panel when present
-- [ ] Each conflict shows the full directory path
-- [ ] "Open in Explorer" action opens the conflicting directory
-- [ ] "Copy path" action copies the directory path to clipboard
-- [ ] Dry Run and Copy buttons are disabled when conflicts exist
-- [ ] No conflict banner when no conflicts found
+- [x] Conflicts displayed prominently as a banner or panel when present
+- [x] Each conflict shows the full directory path
+- [x] "Open in Explorer" action opens the conflicting directory
+- [x] "Copy path" action copies the directory path to clipboard
+- [x] Dry Run and Copy buttons are disabled when conflicts exist
+- [x] No conflict banner when no conflicts found
 
 ## Files Touched
 | File | Change |
@@ -34,11 +34,11 @@ Display detected conflicts prominently in the UI. When conflicts exist, show a b
 - Disable action buttons via state when conflicts.length > 0
 
 ## Testing
-- [ ] No conflicts → no banner, buttons enabled
-- [ ] Conflicts present → banner shown, buttons disabled
-- [ ] Open in Explorer works for conflict path
-- [ ] Copy path works for conflict path
+- [x] No conflicts → no banner, buttons enabled
+- [x] Conflicts present → banner shown, buttons disabled
+- [x] Open in Explorer works for conflict path
+- [x] Copy path works for conflict path
 
 ## Done When
-- [ ] Acceptance criteria met
-- [ ] Verified manually
+- [x] Acceptance criteria met
+- [x] Verified manually

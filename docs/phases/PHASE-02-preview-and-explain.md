@@ -1,7 +1,7 @@
 ---
 id: PHASE-02
 type: phase
-status: planned
+status: complete
 owner: ""
 ---
 
@@ -28,10 +28,10 @@ Implement the filesystem scanning pipeline and the lazy preview tree UI so users
 - [SPRINT-02](../sprints/SPRINT-02.md)
 
 ## Completion Criteria
-- [ ] User can select source and destination folders
-- [ ] Scanning discovers all rule files and builds preview model
-- [ ] Lazy tree view renders with correct include/exclude states
-- [ ] Show-excluded toggle works
-- [ ] Explain panel displays mode, rule chain, and matching patterns
-- [ ] Conflicts displayed prominently with Open in Explorer / Copy path
-- [ ] Large trees do not lock the UI
+- [x] User can select source and destination folders
+- [x] Scanning discovers all rule files and builds preview model
+- [x] Lazy tree view renders with correct include/exclude states
+- [x] Show-excluded toggle works
+- [x] Explain panel displays mode, rule chain, and matching patterns
+- [x] Conflicts displayed prominently with Open in Explorer / Copy path
+- [x] Large trees do not lock the UI

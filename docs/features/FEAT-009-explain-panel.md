@@ -1,7 +1,7 @@
 ---
 id: FEAT-009
 type: feature
-status: planned
+status: complete
 priority: medium
 phase: PHASE-02
 sprint: SPRINT-02
@@ -15,13 +15,13 @@ depends_on: [FEAT-008]
 Implement the Explain panel that displays detailed information about why a selected tree node is included or excluded. Shows the active mode, rule file chain, and all matching pattern lines with their source file path, line number, and pattern text. Includes actions to open rule file folder in Explorer and copy paths.
 
 ## Acceptance Criteria
-- [ ] Selecting a tree node populates the Explain panel
-- [ ] Panel shows: path, decision (Included/Excluded/Conflict), active mode
-- [ ] Panel shows rule file chain (list of rule files contributing to context)
-- [ ] Panel shows all matching patterns with: rule file path, line number, pattern text
-- [ ] "Open in Explorer" action opens the rule file's containing folder
-- [ ] "Copy path" action copies the node path to clipboard
-- [ ] Panel updates when a different node is selected
+- [x] Selecting a tree node populates the Explain panel
+- [x] Panel shows: path, decision (Included/Excluded/Conflict), active mode
+- [x] Panel shows rule file chain (list of rule files contributing to context)
+- [x] Panel shows all matching patterns with: rule file path, line number, pattern text
+- [x] "Open in Explorer" action opens the rule file's containing folder
+- [x] "Copy path" action copies the node path to clipboard
+- [x] Panel updates when a different node is selected
 
 ## Files Touched
 | File | Change |
@@ -36,12 +36,12 @@ Implement the Explain panel that displays detailed information about why a selec
 - Use `clipboard.writeText` for Copy path
 
 ## Testing
-- [ ] Included file shows correct explain data
-- [ ] Excluded file shows matching pattern that caused exclusion
-- [ ] NONE mode node shows no rule files
-- [ ] Open in Explorer opens correct folder
-- [ ] Copy path copies correct path
+- [x] Included file shows correct explain data
+- [x] Excluded file shows matching pattern that caused exclusion
+- [x] NONE mode node shows no rule files
+- [x] Open in Explorer opens correct folder
+- [x] Copy path copies correct path
 
 ## Done When
-- [ ] Acceptance criteria met
-- [ ] Verified manually
+- [x] Acceptance criteria met
+- [x] Verified manually
