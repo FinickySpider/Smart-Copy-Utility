@@ -4,6 +4,8 @@
 
 Smart Copy Utility is an Electron-based desktop application that copies large folder trees efficiently using Windows `robocopy`, while intelligently filtering out disposable and generated files through `.copyignore` and `.copyinclude` rule files embedded in the directory structure.
 
+## Status
+
 ## Features
 
 - **Robocopy-Powered**: Fast, reliable copying using Windows built-in `robocopy` utility
@@ -17,34 +19,79 @@ Smart Copy Utility is an Electron-based desktop application that copies large fo
 - **Cancel Support**: Terminate long-running copy operations at any time
 - **Path Safety Checks**: Prevents dangerous scenarios (same folder, recursive paths)
 
-## Requirements
+## Tech Stack
 
-- **Windows 10 or later** (robocopy is Windows-only)
-- **Node.js 18+** (for development/building)
+- **Framework**: Electron 33
+- **UI**: React 19 + TypeScript 5.7
+- **Build Tool**: Vite 6 with Electron Forge
+- **Bundler**: Rollup + esbuild
+- **Testing**: Vitest 3.2.4
+- **Copy Engine**: Windows `robocopy` (spawned via Child Process IPC)
+- **IPC**: Electron contextBridge with preload isolation
 
-## Installation
+## Development & Building
 
-### From Source
+### Prerequisites
+
+- Windows 10 or later
+- Node.js 18+
+- npm 10+
+
+### Development Workflow
 
 ```bash
-# Clone the repository
-git clone https://github.com/FinickySpider/Smart-Copy-Utility.git
-cd Smart-Copy-Utility
-
 # Install dependencies
 npm install
 
-# Start the application
+# Start dev server with hot reload
 npm start
+
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
 ```
 
-### Building
+### Building Distributables
 
 ```bash
-# Create distributable package
+# Build installers and portable ZIP
 npm run make
 
-# Output will be in the out/make directory
+# Output artifacts:
+# - out/make/squirrel.windows/x64/*.exe (installer)
+# - out/make/zip/win32/x64/*.zip (portable)
+```
+
+## Project Structure
+
+```
+src/
+├── main/              # Main (Node.js) process
+│   ├── index.ts       # Electron app lifecycle
+│   ├── ipc.ts         # IPC handler registration
+│   └── scanner/       # Rule engine & filesystem scanning
+├── preload/           # Context-isolated preload script
+│   └── index.ts       # Exposes electronAPI to renderer
+├── renderer/          # React UI (Renderer process)
+│   ├── App.tsx        # Root component
+│   ├── main.tsx       # ReactDOM entry
+│   ├── components/    # UI components
+│   ├── index.html     # HTML template
+│   └── electron.d.ts  # Electron API types
+
+docs/                 # Project documentation
+├── design/          # DESIGN.md - canonical product design
+├── decisions/       # Architecture decision records (ADRs)
+├── phases/          # Implementation phases
+├── sprints/         # Sprint tracking
+├── features/        # Feature specifications
+├── bugs/            # Bug tracking
+└── templates/       # Document templates
+
+examples/            # Example .copyignore/.copyinclude files
+tests/               # Test suites (co-located with source)
 ```
 
 ## Quick Start
@@ -242,51 +289,17 @@ Buttons are automatically disabled when these conditions are detected.
 3. Check the rule file chain and pattern line numbers
 4. Modify or remove the problematic pattern
 
-## Development
-
-### Project Structure
-
-```
-src/
-├── main/               # Electron main process
-│   ├── rules/          # Rule parsing and pattern matching
-│   ├── scanner/        # Filesystem scanning and tree building
-│   ├── copier/         # Robocopy job planning and execution
-│   └── ipc.ts          # IPC handlers
-├── preload/            # Preload script (IPC bridge)
-└── renderer/           # React UI
-    └── components/     # UI components
-
-tests/                  # Vitest test suite
-docs/                   # Project documentation
-```
-
-### Running Tests
+## Testing
 
 ```bash
 # Run all tests
 npm test
 
-# Run tests in watch mode
+# Run tests in watch mode (auto-rerun on changes)
 npm run test:watch
+
+# Current status: 81 tests passing
 ```
-
-### Tech Stack
-
-- **Electron 33**: Desktop application framework
-- **React 19**: UI library
-- **TypeScript 5.7**: Type-safe development
-- **Vite 6**: Build tool
-- **Vitest 3**: Testing framework
-- **Robocopy**: Windows file copy utility
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## Architecture Decisions
 
@@ -296,6 +309,18 @@ Key design choices are documented in [ADRs](docs/decisions/):
 - [ADR-0003: Hierarchical Rule File System](docs/decisions/ADR-0003-hierarchical-rule-file-system.md)
 - [ADR-0004: Multiple Robocopy Jobs](docs/decisions/ADR-0004-multiple-robocopy-jobs-for-subtree-rules.md)
 - [ADR-0005: Lazy Tree Evaluation](docs/decisions/ADR-0005-lazy-tree-evaluation-for-preview.md)
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/description`)
+3. Commit changes with clear messages
+4. Push to your branch
+5. Open a Pull Request
+
+For bug reports and feature requests, please use [GitHub Issues](https://github.com/FinickySpider/Smart-Copy-Utility/issues).
 
 ## License
 

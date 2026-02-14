@@ -6,6 +6,7 @@ export default defineConfig({
   },
   build: {
     outDir: '.vite/build',
+    emptyOutDir: false,
     lib: {
       entry: 'src/main/index.ts',
       formats: ['cjs'],

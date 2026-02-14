@@ -2,6 +2,8 @@
   "name": "smart-copy-utility",
   "version": "0.1.0",
   "description": "Windows desktop utility to copy large folder trees using robocopy with hierarchical .copyignore/.copyinclude rule files",
+  "author": "FinickySpider",
+  "license": "MIT",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -19,6 +21,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^5.1.4",
     "electron": "^33.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -27,7 +30,6 @@
     "vitest": "^3.0.0"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1",
     "uuid": "^13.0.0"
   }
 }

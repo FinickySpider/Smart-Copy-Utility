@@ -1,0 +1,66 @@
+# Example .copyinclude for Source Code Only
+# Whitelist mode: ONLY copy these file types
+
+# Source code files
+*.cs
+*.vb
+*.fs
+*.java
+*.py
+*.js
+*.ts
+*.jsx
+*.tsx
+*.cpp
+*.c
+*.h
+*.hpp
+*.go
+*.rs
+*.rb
+*.php
+*.swift
+*.kt
+
+# Markup and data
+*.html
+*.css
+*.scss
+*.sass
+*.less
+*.xml
+*.json
+*.yaml
+*.yml
+*.md
+*.markdown
+*.txt
+
+# Configuration
+*.config
+*.ini
+*.toml
+
+# Project files
+*.csproj
+*.vbproj
+*.fsproj
+*.sln
+*.vcxproj
+package.json
+pom.xml
+build.gradle
+Cargo.toml
+Gemfile
+requirements.txt
+
+# Scripts
+*.sh
+*.bat
+*.ps1
+*.cmd
+
+# Documentation
+docs/
+README.md
+LICENSE

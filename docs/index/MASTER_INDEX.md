@@ -26,6 +26,7 @@ Smart Copy Utility
 - [SPRINT-02](../sprints/SPRINT-02.md) — complete (PHASE-02)
 - [SPRINT-03](../sprints/SPRINT-03.md) — complete (PHASE-03)
 - [SPRINT-04](../sprints/SPRINT-04.md) — complete (PHASE-04)
+- [SPRINT-05](../sprints/SPRINT-05.md) — complete (PHASE-04)
 
 ## Features
 - [FEAT-001: Electron project scaffolding](../features/FEAT-001-electron-project-scaffolding.md) — complete (SPRINT-01)
@@ -46,6 +47,9 @@ Smart Copy Utility
 - [FEAT-017: Enhanced error handling](../features/FEAT-017-enhanced-error-handling.md) — complete (SPRINT-04)
 - [FEAT-018: User documentation](../features/FEAT-018-user-documentation.md) — complete (SPRINT-04)
 - [FEAT-014: Cancel support](../features/FEAT-014-cancel-support.md) — complete (SPRINT-03)
+
+## Bugs
+- [BUG-001: Packaged app shows empty window](../bugs/BUG-001-packaged-app-empty-window.md) — complete (SPRINT-05)
 
 ## Decision Log
 - [DECISION_LOG](../decisions/DECISION_LOG.md)

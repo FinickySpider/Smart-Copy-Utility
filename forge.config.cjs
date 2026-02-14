@@ -1,12 +1,18 @@
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './icon',
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        setupIcon: './icon.ico',
+        iconUrl: 'https://raw.githubusercontent.com/FinickySpider/Smart-Copy-Utility/main/icon.ico',
+        authors: 'FinickySpider',
+        description: 'Windows desktop utility to copy large folder trees using robocopy with hierarchical .copyignore/.copyinclude rule files',
+      },
     },
     {
       name: '@electron-forge/maker-zip',
@@ -33,6 +39,7 @@ module.exports = {
           {
             name: 'main_window',
             config: 'vite.renderer.config.ts',
+            html: 'src/renderer/index.html',
           },
         ],
       },

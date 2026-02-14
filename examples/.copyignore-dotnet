@@ -1,0 +1,65 @@
+# .NET / C# Project
+# Common patterns to exclude when copying
+
+# Build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+
+# NuGet packages
+packages/
+*.nupkg
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.csproj.user
+*.vbproj.user
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+
+# Publish profiles
+*.pubxml
+*.publishproj
+
+# Azure
+*.azurePubxml
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Cache files
+*.cache
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp

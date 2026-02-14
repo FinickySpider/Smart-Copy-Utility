@@ -1,0 +1,45 @@
+# General Development Project
+# Minimal set of common exclusions
+
+# Version control
+.git/
+.svn/
+.hg/
+
+# Dependencies (language-agnostic)
+node_modules/
+vendor/
+packages/
+
+# Build outputs
+dist/
+build/
+out/
+bin/
+obj/
+target/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.cache/

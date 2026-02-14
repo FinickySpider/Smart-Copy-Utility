@@ -1,0 +1,204 @@
+# Comprehensive Multi-Platform Project Exclusions
+# Combines patterns for Node.js, Python, Java, .NET, C#, Web, and general projects
+
+# ============================================================================
+# Version Control
+# ============================================================================
+.git/
+.svn/
+.hg/
+
+# ============================================================================
+# Dependencies (Language-Agnostic)
+# ============================================================================
+node_modules/
+bower_components/
+jspm_packages/
+vendor/
+packages/
+venv/
+env/
+ENV/
+.venv/
+virtualenv/
+
+# ============================================================================
+# Build Outputs & Build Artifacts
+# ============================================================================
+dist/
+build/
+out/
+bin/
+obj/
+target/
+bld/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.vite/
+.docusaurus/
+nbbuild/
+nbdist/
+.gatsby/
+
+# ============================================================================
+# Python Specific
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+.python-version
+
+# ============================================================================
+# Java / Gradle / Maven Specific
+# ============================================================================
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.mvn/
+mvnw
+mvnw.cmd
+.metadata/
+tmp/
+*.bak
+*.swp
+*~.nib
+local.properties
+hs_err_pid*
+.classpath
+.project
+.settings/
+.nb-gradle/
+nbproject/private/
+
+# ============================================================================
+# .NET / C# Specific
+# ============================================================================
+*.exe
+*.dll
+*.pdb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+*.vbproj.user
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ============================================================================
+# Node.js / JavaScript / TypeScript Specific
+# ============================================================================
+.nyc_output/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+pnpm-debug.log*
+
+# ============================================================================
+# NuGet Packages
+# ============================================================================
+*.nupkg
+*.publishproj
+*.pubxml
+*.azurePubxml
+
+# ============================================================================
+# Test Results & Coverage
+# ============================================================================
+TestResults/
+*.trx
+*.coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# ============================================================================
+# IDE & Editor Files
+# ============================================================================
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+.classpath
+.factorypath
+
+# ============================================================================
+# Environment Variables & Configuration
+# ============================================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.cache
+.cache/
+.docstates
+
+# ============================================================================
+# Logs
+# ============================================================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+pip-log.txt
+
+# ============================================================================
+# OS-Specific Files
+# ============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================================
+# Temporary & Cache Files
+# ============================================================================
+*.tmp
+*.temp
+.tmp/
+.temp/
+.cache

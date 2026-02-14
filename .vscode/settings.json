@@ -8,7 +8,14 @@
         "**/flutter/ephemeral": true,
         "**/Flutter/ephemeral": true,
         "**/.symlinks": true,
-        "**/.plugin_symlinks": true
+        "**/.plugin_symlinks": true,
+        ".vscode": true,
+        ".vite": true,
+        "node_modules": true
     },
-    "hide-files.files": []
+    "hide-files.files": [
+        ".vscode",
+        ".vite",
+        "node_modules"
+    ]
 }
