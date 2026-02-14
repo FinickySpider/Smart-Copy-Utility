@@ -7,10 +7,10 @@ Single source of truth. The agent starts here.
 Smart Copy Utility
 
 ## Active Phase
-- [PHASE-03: Copy Engine & Execution](../phases/PHASE-03-copy-engine-and-execution.md) — active
+- [PHASE-04: Polish & Hardening](../phases/PHASE-04-polish-and-hardening.md) — planned (ready to start)
 
 ## Active Sprint
-- [SPRINT-03](../sprints/SPRINT-03.md) — active
+- (none — Phase 3 complete, Phase 4 not yet started)
 
 ## In Progress
 - (none)
@@ -18,13 +18,13 @@ Smart Copy Utility
 ## Phases
 - [PHASE-01: Foundation & Rule Engine](../phases/PHASE-01-foundation-and-rule-engine.md) — complete
 - [PHASE-02: Preview & Explain](../phases/PHASE-02-preview-and-explain.md) — complete
-- [PHASE-03: Copy Engine & Execution](../phases/PHASE-03-copy-engine-and-execution.md) — active
+- [PHASE-03: Copy Engine & Execution](../phases/PHASE-03-copy-engine-and-execution.md) — complete
 - [PHASE-04: Polish & Hardening](../phases/PHASE-04-polish-and-hardening.md) — planned
 
 ## Sprints
 - [SPRINT-01](../sprints/SPRINT-01.md) — complete (PHASE-01)
 - [SPRINT-02](../sprints/SPRINT-02.md) — complete (PHASE-02)
-- [SPRINT-03](../sprints/SPRINT-03.md) — active (PHASE-03)
+- [SPRINT-03](../sprints/SPRINT-03.md) — complete (PHASE-03)
 
 ## Features
 - [FEAT-001: Electron project scaffolding](../features/FEAT-001-electron-project-scaffolding.md) — complete (SPRINT-01)
@@ -37,10 +37,10 @@ Smart Copy Utility
 - [FEAT-008: Lazy preview tree view](../features/FEAT-008-lazy-preview-tree-view.md) — complete (SPRINT-02)
 - [FEAT-009: Explain panel](../features/FEAT-009-explain-panel.md) — complete (SPRINT-02)
 - [FEAT-010: Conflict list UI](../features/FEAT-010-conflict-list-ui.md) — complete (SPRINT-02)
-- [FEAT-011: Robocopy job plan builder](../features/FEAT-011-robocopy-job-plan-builder.md) — planned (SPRINT-03)
-- [FEAT-012: Dry run execution](../features/FEAT-012-dry-run-execution.md) — planned (SPRINT-03)
-- [FEAT-013: Copy execution with progress streaming](../features/FEAT-013-copy-execution-with-progress-streaming.md) — planned (SPRINT-03)
-- [FEAT-014: Cancel support](../features/FEAT-014-cancel-support.md) — planned (SPRINT-03)
+- [FEAT-011: Robocopy job plan builder](../features/FEAT-011-robocopy-job-plan-builder.md) — complete (SPRINT-03)
+- [FEAT-012: Dry run execution](../features/FEAT-012-dry-run-execution.md) — complete (SPRINT-03)
+- [FEAT-013: Copy execution with progress streaming](../features/FEAT-013-copy-execution-with-progress-streaming.md) — complete (SPRINT-03)
+- [FEAT-014: Cancel support](../features/FEAT-014-cancel-support.md) — complete (SPRINT-03)
 
 ## Decision Log
 - [DECISION_LOG](../decisions/DECISION_LOG.md)

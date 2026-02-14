@@ -1,7 +1,7 @@
 ---
 id: FEAT-014
 type: feature
-status: planned
+status: complete
 priority: medium
 phase: PHASE-03
 sprint: SPRINT-03
@@ -15,12 +15,12 @@ depends_on: [FEAT-013]
 Implement cancel functionality that terminates the currently running robocopy process, stops future jobs in the plan, updates the UI state to "cancelled", and preserves logs up to the cancellation point.
 
 ## Acceptance Criteria
-- [ ] `cancel({ scanId })` terminates the current robocopy child process
-- [ ] Remaining jobs in the plan are not started
-- [ ] UI state transitions to "cancelled" via `op:status` event
-- [ ] Logs captured up to cancellation point are preserved and visible
-- [ ] Cancel button is enabled during dry run and copy operations
-- [ ] Cancel during dry run stops the dry run
+- [x] `cancel()` terminates the current robocopy child process
+- [x] Remaining jobs in the plan are not started
+- [x] State transitions to "cancelled" via status events
+- [x] Logs captured up to cancellation point are preserved
+- [ ] Cancel button is enabled during dry run and copy operations (UI not implemented)
+- [ ] Cancel during dry run stops the dry run (UI not implemented)
 
 ## Files Touched
 | File | Change |

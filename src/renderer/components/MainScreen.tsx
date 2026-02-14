@@ -3,6 +3,8 @@ import { FolderPicker } from './FolderPicker';
 import { TreeView } from './TreeView';
 import { ExplainPanel } from './ExplainPanel';
 import { ConflictBanner } from './ConflictBanner';
+import { LogPanel } from './LogPanel';
+import { ProgressBar } from './ProgressBar';
 
 export function MainScreen(): React.ReactElement {
   const [sourcePath, setSourcePath] = useState<string | null>(null);
@@ -16,6 +18,54 @@ export function MainScreen(): React.ReactElement {
   } | null>(null);
   const [scanning, setScanning] = useState(false);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [copyStatus, setCopyStatus] = useState<string>('idle');
+  const [logs, setLogs] = useState<string[]>([]);
+  const [currentJob, setCurrentJob] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [dryRunReport, setDryRunReport] = useState<any>(null);
+
+  // Set up copy event listeners
+  React.useEffect(() => {
+    const unsubStatus = window.electronAPI.onCopyStatus((data: any) => {
+      setCopyStatus(data.status);
+    });
+
+    const unsubJobStart = window.electronAPI.onCopyJobStart((data: any) => {
+      setLogs((prev) => [
+        ...prev,
+        `[JOB START] ${data.srcRoot} → ${data.dstRoot}`,
+      ]);
+    });
+
+    const unsubJobEnd = window.electronAPI.onCopyJobEnd((data: any) => {
+      setCurrentJob((prev) => prev + 1);
+      setLogs((prev) => [
+        ...prev,
+        `[JOB END] ${data.success ? 'Success' : 'Failed'} (exit code: ${data.exitCode})`,
+      ]);
+    });
+
+    const unsubLogLine = window.electronAPI.onCopyLogLine((data: any) => {
+      setLogs((prev) => [...prev, data.line]);
+    });
+
+    const unsubDone = window.electronAPI.onCopyDone(() => {
+      setLogs((prev) => [...prev, '\n=== Copy completed successfully ===']);
+    });
+
+    const unsubError = window.electronAPI.onCopyError((data: any) => {
+      setLogs((prev) => [...prev, `\n[ERROR] ${data.error}`]);
+    });
+
+    return () => {
+      unsubStatus();
+      unsubJobStart();
+      unsubJobEnd();
+      unsubLogLine();
+      unsubDone();
+      unsubError();
+    };
+  }, []);
 
   const handleSelectFolder = async (kind: 'source' | 'destination') => {
     const result = await window.electronAPI.selectFolder({ kind });
@@ -45,11 +95,83 @@ export function MainScreen(): React.ReactElement {
       });
       setScanResult(result);
       setSelectedNode(null);
+      // Reset copy state
+      setLogs([]);
+      setCurrentJob(0);
+      setTotalJobs(0);
+      setDryRunReport(null);
+      setCopyStatus('idle');
     } catch (error) {
       console.error('Scan failed:', error);
       setErrorMessage('Failed to scan source directory.');
     } finally {
       setScanning(false);
+    }
+  };
+
+  const handleDryRun = async () => {
+    if (!scanResult) return;
+
+    setLogs(['Starting dry run...']);
+    setCopyStatus('dryrun');
+
+    try {
+      const result = await window.electronAPI.dryRun({
+        scanId: scanResult.scanId,
+        rootOnly: false,
+      });
+
+      if (result.success && result.report) {
+        const report = result.report;
+        setDryRunReport(report);
+        setTotalJobs(report.plan.totalJobs);
+        setLogs((prev) => [
+          ...prev,
+          `Dry run complete: ${report.plan.totalJobs} jobs`,
+          `Estimated files: ${report.estimatedFiles || 'N/A'}`,
+          `Estimated bytes: ${report.estimatedBytes || 'N/A'}`,
+          `Valid plan: ${report.validPlan ? 'Yes' : 'No'}`,
+        ]);
+      } else {
+        setLogs((prev) => [...prev, `Dry run failed: ${result.error}`]);
+      }
+
+      setCopyStatus('idle');
+    } catch (error) {
+      setLogs((prev) => [...prev, `Dry run error: ${error}`]);
+      setCopyStatus('error');
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!scanResult) return;
+
+    setLogs(['Starting copy operation...']);
+    setCopyStatus('copying');
+    setCurrentJob(0);
+
+    try {
+      const result = await window.electronAPI.copy({
+        scanId: scanResult.scanId,
+        rootOnly: false,
+      });
+
+      if (!result.success) {
+        setLogs((prev) => [...prev, `Copy failed: ${result.error}`]);
+        setCopyStatus('error');
+      }
+    } catch (error) {
+      setLogs((prev) => [...prev, `Copy error: ${error}`]);
+      setCopyStatus('error');
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      await window.electronAPI.cancel();
+      setLogs((prev) => [...prev, 'Cancelling...']);
+    } catch (error) {
+      console.error('Cancel failed:', error);
     }
   };
 
@@ -71,6 +193,9 @@ export function MainScreen(): React.ReactElement {
 
   // Dry Run and Copy are additionally disabled when conflicts exist
   const dryRunCopyDisabled = actionsDisabled || hasConflicts;
+
+  // Cancel is enabled when copy is in progress
+  const canCancel = copyStatus === 'copying' || copyStatus === 'dryrun';
 
   // Determine error message
   React.useEffect(() => {
@@ -156,40 +281,78 @@ export function MainScreen(): React.ReactElement {
           {scanning ? 'Scanning...' : 'Preview'}
         </button>
         <button
-          disabled={dryRunCopyDisabled}
+          disabled={dryRunCopyDisabled || copyStatus !== 'idle'}
+          onClick={handleDryRun}
           style={{
             padding: '10px 20px',
             fontSize: '14px',
             fontWeight: 600,
-            cursor: dryRunCopyDisabled ? 'not-allowed' : 'pointer',
+            cursor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: dryRunCopyDisabled ? '#ccc' : '#95a5a6',
-            color: dryRunCopyDisabled ? '#666' : '#fff',
-            opacity: dryRunCopyDisabled ? 0.6 : 1,
+            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? '#ccc' : '#95a5a6',
+            color: dryRunCopyDisabled || copyStatus !== 'idle' ? '#666' : '#fff',
+            opacity: dryRunCopyDisabled || copyStatus !== 'idle' ? 0.6 : 1,
           }}
           title={hasConflicts ? 'Resolve conflicts before running Dry Run' : ''}
         >
           Dry Run
         </button>
         <button
-          disabled={dryRunCopyDisabled}
+          disabled={dryRunCopyDisabled || copyStatus !== 'idle'}
+          onClick={handleCopy}
           style={{
             padding: '10px 20px',
             fontSize: '14px',
             fontWeight: 600,
-            cursor: dryRunCopyDisabled ? 'not-allowed' : 'pointer',
+            cursor: dryRunCopyDisabled || copyStatus !== 'idle' ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: 'none',
-            backgroundColor: dryRunCopyDisabled ? '#ccc' : '#27ae60',
-            color: dryRunCopyDisabled ? '#666' : '#fff',
-            opacity: dryRunCopyDisabled ? 0.6 : 1,
+            backgroundColor: dryRunCopyDisabled || copyStatus !== 'idle' ? '#ccc' : '#27ae60',
+            color: dryRunCopyDisabled || copyStatus !== 'idle' ? '#666' : '#fff',
+            opacity: dryRunCopyDisabled || copyStatus !== 'idle' ? 0.6 : 1,
           }}
           title={hasConflicts ? 'Resolve conflicts before running Copy' : ''}
         >
           Copy
         </button>
+        <button
+          disabled={!canCancel}
+          onClick={handleCancel}
+          style={{
+            padding: '10px 20px',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: !canCancel ? 'not-allowed' : 'pointer',
+            borderRadius: '4px',
+            border: 'none',
+            backgroundColor: !canCancel ? '#ccc' : '#e74c3c',
+            color: !canCancel ? '#666' : '#fff',
+            opacity: !canCancel ? 0.6 : 1,
+          }}
+        >
+          Cancel
+        </button>
       </div>
+
+      {/* Progress Bar */}
+      {copyStatus !== 'idle' && (
+        <ProgressBar
+          current={currentJob}
+          total={totalJobs}
+          status={copyStatus}
+        />
+      )}
+
+      {/* Log Panel */}
+      {logs.length > 0 && (
+        <div style={{ marginBottom: '24px' }}>
+          <h3 style={{ marginBottom: '12px', fontSize: '16px', fontWeight: 600 }}>
+            Operation Log
+          </h3>
+          <LogPanel logs={logs} />
+        </div>
+      )}
 
       {/* Conflict Banner */}
       {scanResult && <ConflictBanner conflicts={scanResult.conflicts} />}

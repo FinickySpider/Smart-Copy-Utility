@@ -63,6 +63,54 @@ interface ExplainResponse {
   explain: ExplainData;
 }
 
+interface JobPlanOptions {
+  scanId: string;
+  rootOnly?: boolean;
+}
+
+interface RobocopyJob {
+  jobId: string;
+  srcRoot: string;
+  dstRoot: string;
+  mode: string;
+  patterns: PatternEntry[];
+  originRuleFiles: string[];
+}
+
+interface JobPlan {
+  planId: string;
+  sourceRoot: string;
+  destRoot: string;
+  jobs: RobocopyJob[];
+  totalJobs: number;
+}
+
+interface DryRunReport {
+  plan: JobPlan;
+  validPlan: boolean;
+  conflicts: string[];
+  estimatedFiles?: number;
+  estimatedBytes?: number;
+}
+
+interface DryRunResponse {
+  success: boolean;
+  report?: DryRunReport;
+  error?: string;
+}
+
+interface CopyResponse {
+  success: boolean;
+  error?: string;
+}
+
+interface CancelResponse {
+  success: boolean;
+  error?: string;
+}
+
+type CopyEventListener = (data: any) => void;
+
 export interface ElectronAPI {
   selectFolder: (args: { kind: string }) => Promise<{ path: string | null }>;
   scan: (args: ScanArgs) => Promise<ScanResponse>;
@@ -70,6 +118,15 @@ export interface ElectronAPI {
   explain: (args: ExplainArgs) => Promise<ExplainResponse>;
   openInExplorer: (args: { dirPath: string }) => Promise<{ success: boolean }>;
   copyToClipboard: (args: { text: string }) => Promise<{ success: boolean }>;
+  dryRun: (args: JobPlanOptions) => Promise<DryRunResponse>;
+  copy: (args: JobPlanOptions) => Promise<CopyResponse>;
+  cancel: () => Promise<CancelResponse>;
+  onCopyStatus: (listener: CopyEventListener) => () => void;
+  onCopyJobStart: (listener: CopyEventListener) => () => void;
+  onCopyJobEnd: (listener: CopyEventListener) => () => void;
+  onCopyLogLine: (listener: CopyEventListener) => () => void;
+  onCopyDone: (listener: CopyEventListener) => () => void;
+  onCopyError: (listener: CopyEventListener) => () => void;
 }
 
 declare global {

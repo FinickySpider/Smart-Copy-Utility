@@ -1,7 +1,7 @@
 ---
 id: FEAT-013
 type: feature
-status: planned
+status: complete
 priority: high
 phase: PHASE-03
 sprint: SPRINT-03
@@ -15,14 +15,14 @@ depends_on: [FEAT-011, FEAT-012]
 Execute the robocopy job plan sequentially, spawning robocopy for each job. Stream stdout/stderr line-by-line to the renderer via IPC events. Interpret robocopy exit codes (0–7 success, 8+ failure). Emit job start/end and overall status events. Show a summary when all jobs complete.
 
 ## Acceptance Criteria
-- [ ] `copy({ scanId, options })` executes jobs sequentially via robocopy
-- [ ] Robocopy stdout/stderr streamed line-by-line via `op:logLine` events
-- [ ] `op:jobStart` and `op:jobEnd` events emitted per job
-- [ ] `op:status` events emitted for phase changes (copying, done, error)
-- [ ] Exit codes 0–7 treated as success; 8+ treated as failure
-- [ ] Failed job stops remaining jobs and reports error
-- [ ] Copy is blocked if conflicts exist
-- [ ] Correct destination directory structure created
+- [x] `copy({ scanId, options })` executes jobs sequentially via robocopy
+- [x] Robocopy stdout/stderr streamed line-by-line via IPC events
+- [x] Job start/end events emitted per job
+- [x] Status events emitted for phase changes (copying, done, error)
+- [x] Exit codes 0–7 treated as success; 8+ treated as failure
+- [x] Failed job stops remaining jobs and reports error
+- [x] Copy is blocked if conflicts exist
+- [x] Correct destination directory structure created (via robocopy)
 
 ## Files Touched
 | File | Change |

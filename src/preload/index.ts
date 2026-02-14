@@ -64,6 +64,54 @@ interface ExplainResponse {
   explain: ExplainData;
 }
 
+interface JobPlanOptions {
+  scanId: string;
+  rootOnly?: boolean;
+}
+
+interface RobocopyJob {
+  jobId: string;
+  srcRoot: string;
+  dstRoot: string;
+  mode: string;
+  patterns: PatternEntry[];
+  originRuleFiles: string[];
+}
+
+interface JobPlan {
+  planId: string;
+  sourceRoot: string;
+  destRoot: string;
+  jobs: RobocopyJob[];
+  totalJobs: number;
+}
+
+interface DryRunReport {
+  plan: JobPlan;
+  validPlan: boolean;
+  conflicts: string[];
+  estimatedFiles?: number;
+  estimatedBytes?: number;
+}
+
+interface DryRunResponse {
+  success: boolean;
+  report?: DryRunReport;
+  error?: string;
+}
+
+interface CopyResponse {
+  success: boolean;
+  error?: string;
+}
+
+interface CancelResponse {
+  success: boolean;
+  error?: string;
+}
+
+type CopyEventListener = (data: any) => void;
+
 /**
  * Exposes a safe API to the renderer process via contextBridge.
  * The renderer accesses these methods via `window.electronAPI`.
@@ -86,4 +134,44 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   copyToClipboard: (args: { text: string }): Promise<{ success: boolean }> =>
     ipcRenderer.invoke('copyToClipboard', args),
+  
+  dryRun: (args: JobPlanOptions): Promise<DryRunResponse> =>
+    ipcRenderer.invoke('dryRun', args),
+  
+  copy: (args: JobPlanOptions): Promise<CopyResponse> =>
+    ipcRenderer.invoke('copy', args),
+  
+  cancel: (): Promise<CancelResponse> =>
+    ipcRenderer.invoke('cancel'),
+  
+  // Event listeners for copy progress
+  onCopyStatus: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:status', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:status', listener);
+  },
+  
+  onCopyJobStart: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:jobStart', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:jobStart', listener);
+  },
+  
+  onCopyJobEnd: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:jobEnd', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:jobEnd', listener);
+  },
+  
+  onCopyLogLine: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:logLine', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:logLine', listener);
+  },
+  
+  onCopyDone: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:done', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:done', listener);
+  },
+  
+  onCopyError: (listener: CopyEventListener) => {
+    ipcRenderer.on('copy:error', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('copy:error', listener);
+  },
 });

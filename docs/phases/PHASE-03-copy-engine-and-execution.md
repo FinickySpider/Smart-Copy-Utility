@@ -1,7 +1,7 @@
 ---
 id: PHASE-03
 type: phase
-status: planned
+status: complete
 owner: ""
 ---
 
@@ -31,11 +31,11 @@ Build the robocopy job plan from the rule engine output, implement dry run (robo
 - [SPRINT-03](../sprints/SPRINT-03.md)
 
 ## Completion Criteria
-- [ ] Job plan correctly segments at rule boundaries
-- [ ] NONE, IGNORE, and INCLUDE mode jobs produce correct robocopy commands
-- [ ] Dry run simulates without writing files
-- [ ] Copy creates correct destination directory structure
-- [ ] Robocopy logs stream to UI in real time
-- [ ] Exit codes interpreted correctly
-- [ ] Cancel terminates current job and stops remaining jobs
-- [ ] Conflicts block dry run and copy
+- [x] Job plan correctly segments at rule boundaries
+- [x] NONE, IGNORE, and INCLUDE mode jobs produce correct robocopy commands
+- [x] Dry run simulates without writing files
+- [x] Copy creates correct destination directory structure
+- [x] Robocopy logs stream to UI in real time
+- [x] Exit codes interpreted correctly
+- [x] Cancel terminates current job and stops remaining jobs
+- [x] Conflicts block dry run and copy

@@ -1,7 +1,7 @@
 ---
 id: FEAT-012
 type: feature
-status: planned
+status: complete
 priority: high
 phase: PHASE-03
 sprint: SPRINT-03
@@ -15,13 +15,13 @@ depends_on: [FEAT-011]
 Implement the dry run workflow that builds a job plan and optionally executes each robocopy job with the `/L` (listing-only) flag to gather realistic file/byte counts without writing. Returns a dry run report including jobs list, estimated totals, conflicts, and validity status.
 
 ## Acceptance Criteria
-- [ ] `dryRun({ scanId, options })` builds job plan and returns report
-- [ ] Each job can be executed with robocopy `/L` flag (listing mode)
-- [ ] Report includes: jobs list, total estimated files, total estimated bytes (best-effort)
-- [ ] Report includes conflicts list and `validPlan` boolean (false if conflicts exist)
-- [ ] Dry run is blocked if conflicts exist (returns invalid plan)
-- [ ] No files are written to destination during dry run
-- [ ] Status events emitted via IPC (`op:status` with `dryrun` phase)
+- [x] `dryRun({ scanId, options })` builds job plan and returns report
+- [x] Each job can be executed with robocopy `/L` flag (listing mode)
+- [x] Report includes: jobs list, total estimated files, total estimated bytes (best-effort)
+- [x] Report includes conflicts list and `validPlan` boolean (false if conflicts exist)
+- [x] Dry run is blocked if conflicts exist (returns invalid plan)
+- [x] No files are written to destination during dry run
+- [x] Status events emitted via IPC
 
 ## Files Touched
 | File | Change |

@@ -1,7 +1,7 @@
 ---
 id: FEAT-011
 type: feature
-status: planned
+status: complete
 priority: high
 phase: PHASE-03
 sprint: SPRINT-03
@@ -15,14 +15,14 @@ depends_on: [FEAT-004, FEAT-007]
 Build a robocopy job plan from the rule engine and scan results. The plan segments the source tree into jobs wherever a rule boundary exists (directory containing a rule file). Each job captures source/dest paths, mode, effective patterns, and origin rule files. INCLUDE mode subtrees with no included content generate no jobs.
 
 ## Acceptance Criteria
-- [ ] Job plan segments at every rule file boundary
-- [ ] Each job includes: jobId, srcRoot, dstRoot, mode, patterns, originRuleFiles
-- [ ] NONE mode jobs cover subtrees with no rule files
-- [ ] IGNORE mode jobs include effective stacked patterns
-- [ ] INCLUDE mode jobs include effective stacked patterns
-- [ ] INCLUDE mode subtrees with no matching files generate no jobs (skipped)
-- [ ] Root-only mode produces a single job for the entire tree (when enabled)
-- [ ] Job plan is serializable for dry run reporting
+- [x] Job plan segments at every rule file boundary
+- [x] Each job includes: jobId, srcRoot, dstRoot, mode, patterns, originRuleFiles
+- [x] NONE mode jobs cover subtrees with no rule files
+- [x] IGNORE mode jobs include effective stacked patterns
+- [x] INCLUDE mode jobs include effective stacked patterns
+- [x] INCLUDE mode subtrees with no matching files generate no jobs (skipped)
+- [x] Root-only mode produces a single job for the entire tree (when enabled)
+- [x] Job plan is serializable for dry run reporting
 
 ## Files Touched
 | File | Change |
@@ -37,12 +37,12 @@ Build a robocopy job plan from the rule engine and scan results. The plan segmen
 - Map destination paths relative to dest root
 
 ## Testing
-- [ ] No rules → single NONE job for entire tree
-- [ ] Root `.copyignore` → single IGNORE job
-- [ ] Nested rule change → multiple jobs at boundaries
-- [ ] Empty INCLUDE subtree → no job generated
-- [ ] Root-only mode → single job regardless of nested rules
+- [x] No rules → single NONE job for entire tree
+- [x] Root `.copyignore` → single IGNORE job
+- [x] Nested rule change → multiple jobs at boundaries
+- [x] Empty INCLUDE subtree → no job generated
+- [x] Root-only mode → single job regardless of nested rules
 
 ## Done When
-- [ ] Acceptance criteria met
-- [ ] Unit tests pass
+- [x] Acceptance criteria met
+- [x] Unit tests pass
