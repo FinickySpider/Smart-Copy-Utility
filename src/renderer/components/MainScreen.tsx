@@ -293,23 +293,23 @@ export function MainScreen(): React.ReactElement {
   const isPathInside = (childPath: string | null, parentPath: string | null): boolean => {
     if (!childPath || !parentPath) return false;
     
-    // Normalize paths: remove trailing slashes and convert to lowercase (Windows is case-insensitive)
+    // Normalize paths: convert to forward slashes, remove trailing slashes, lowercase
     const normalizePathString = (p: string): string => {
-      let normalized = p.replace(/[/\\]+$/, ''); // Remove trailing slashes
+      let normalized = p.replace(/\\/g, '/'); // Convert backslashes to forward slashes
+      normalized = normalized.replace(/\/+$/, ''); // Remove trailing slashes
       normalized = normalized.toLowerCase(); // Case-insensitive comparison
-      // Ensure consistent separator
-      normalized = normalized.replace(/\\/g, '/');
       return normalized;
     };
 
     const normalizedChild = normalizePathString(childPath);
     const normalizedParent = normalizePathString(parentPath);
 
-    // Check if child starts with parent followed by a separator
-    return (
-      normalizedChild.startsWith(normalizedParent + '/') ||
-      normalizedChild.startsWith(normalizedParent + '\\')
-    );
+    // If they're equal, child is not "inside" parent
+    if (normalizedChild === normalizedParent) return false;
+
+    // Child must start with parent path followed by a separator
+    // This prevents "D:" from matching "D:/folder" (same level, not nested)
+    return normalizedChild.startsWith(normalizedParent + '/');
   };
 
   // Check if source and destination are the same
@@ -320,9 +320,6 @@ export function MainScreen(): React.ReactElement {
 
   // Check if destination is inside source (would cause recursion)
   const isDestInsideSource = isPathInside(destPath, sourcePath);
-
-  // Check if source is inside destination (would overwrite source)
-  const isSourceInsideDest = isPathInside(sourcePath, destPath);
 
   // Check if paths are missing
   const isSourceMissing = sourcePath === null;
@@ -336,8 +333,7 @@ export function MainScreen(): React.ReactElement {
     isSourceMissing || 
     isDestMissing || 
     hasSameFolderError || 
-    isDestInsideSource || 
-    isSourceInsideDest;
+    isDestInsideSource;
 
   // Dry Run and Copy are additionally disabled when conflicts exist
   const dryRunCopyDisabled = actionsDisabled || hasConflicts;
@@ -355,10 +351,6 @@ export function MainScreen(): React.ReactElement {
       setErrorMessage(
         'Error: Destination cannot be inside source folder (would cause recursion).'
       );
-    } else if (isSourceInsideDest) {
-      setErrorMessage(
-        'Error: Source cannot be inside destination folder (would overwrite source).'
-      );
     } else if (isSourceMissing && isDestMissing) {
       setErrorMessage('Please select both source and destination folders.');
     } else if (isSourceMissing) {
@@ -368,7 +360,7 @@ export function MainScreen(): React.ReactElement {
     } else {
       setErrorMessage(null);
     }
-  }, [sourcePath, destPath, hasSameFolderError, isDestInsideSource, isSourceInsideDest, isSourceMissing, isDestMissing]);
+  }, [sourcePath, destPath, hasSameFolderError, isDestInsideSource, isSourceMissing, isDestMissing]);
 
   return (
     <div
@@ -443,7 +435,7 @@ export function MainScreen(): React.ReactElement {
               kind="source"
               path={sourcePath}
               onSelect={handleSelectFolder}
-              hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
+              hasError={hasSameFolderError || isDestInsideSource}
               disabled={scanning || copyStatus !== 'idle'}
             />
             <FolderPicker
@@ -451,7 +443,7 @@ export function MainScreen(): React.ReactElement {
               kind="destination"
               path={destPath}
               onSelect={handleSelectFolder}
-              hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
+              hasError={hasSameFolderError || isDestInsideSource}
               disabled={scanning || copyStatus !== 'idle'}
             />
           </div>

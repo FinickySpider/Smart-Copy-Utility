@@ -71,6 +71,7 @@ Smart Copy Utility
 
 ## Bugs
 - [BUG-001: Packaged app shows empty window](../bugs/BUG-001-packaged-app-empty-window.md) — complete (SPRINT-05)
+- [BUG-002: Source-inside-destination check blocks valid copy](../bugs/BUG-002-source-inside-destination-blocks-valid-copy.md) — complete (SPRINT-04)
 
 ## Decision Log
 - [DECISION_LOG](../decisions/DECISION_LOG.md)
