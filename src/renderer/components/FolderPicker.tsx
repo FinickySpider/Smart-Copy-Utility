@@ -6,6 +6,7 @@ interface FolderPickerProps {
   path: string | null;
   onSelect: (kind: 'source' | 'destination') => void;
   hasError?: boolean;
+  disabled?: boolean;
 }
 
 export function FolderPicker({
@@ -14,6 +15,7 @@ export function FolderPicker({
   path,
   onSelect,
   hasError = false,
+  disabled = false,
 }: FolderPickerProps): React.ReactElement {
   return (
     <div style={{ marginBottom: '16px' }}>
@@ -23,14 +25,16 @@ export function FolderPicker({
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <button
           onClick={() => onSelect(kind)}
+          disabled={disabled}
           style={{
             padding: '8px 16px',
             fontSize: '14px',
-            cursor: 'pointer',
+            cursor: disabled ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             border: '1px solid var(--border-color)',
-            backgroundColor: 'var(--bg-secondary)',
+            backgroundColor: disabled ? 'var(--button-disabled)' : 'var(--bg-secondary)',
             color: 'var(--text-primary)',
+            opacity: disabled ? 0.6 : 1,
           }}
         >
           Select Folder

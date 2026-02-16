@@ -119,6 +119,42 @@ type CopyEventListener = (data: any) => void;
 contextBridge.exposeInMainWorld('electronAPI', {
   selectFolder: (args: { kind: string }): Promise<{ path: string | null }> =>
     ipcRenderer.invoke('selectFolder', args),
+
+  selectDirectory: (args: { title: string }): Promise<{ path: string | null }> =>
+    ipcRenderer.invoke('selectDirectory', args),
+
+  selectFiles: (args: { title: string; multi: boolean }): Promise<{ success: boolean; filePaths: string[]; error?: string }> =>
+    ipcRenderer.invoke('selectFiles', args),
+
+  getDefaultRuleFilePath: (args: { folderPath: string; ruleType: 'copyignore' | 'copyinclude' }): Promise<{ filePath: string }> =>
+    ipcRenderer.invoke('getDefaultRuleFilePath', args),
+
+  openRuleFileDialog: (): Promise<any> =>
+    ipcRenderer.invoke('openRuleFileDialog'),
+
+  showSaveRuleFileDialog: (args: { ruleType: 'copyignore' | 'copyinclude'; defaultDir?: string }): Promise<{ filePath: string | null }> =>
+    ipcRenderer.invoke('showSaveRuleFileDialog', args),
+
+  checkRuleFileSave: (args: { targetPath: string; ruleType: 'copyignore' | 'copyinclude' }): Promise<any> =>
+    ipcRenderer.invoke('checkRuleFileSave', args),
+
+  writeRuleFile: (args: { targetPath: string; ruleType: 'copyignore' | 'copyinclude'; content: string; overwriteExisting: boolean; allowConflict: boolean }): Promise<any> =>
+    ipcRenderer.invoke('writeRuleFile', args),
+
+  hasOpenAIApiKey: (): Promise<{ hasKey: boolean }> =>
+    ipcRenderer.invoke('hasOpenAIApiKey'),
+
+  setOpenAIApiKey: (args: { apiKey: string }): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('setOpenAIApiKey', args),
+
+  clearOpenAIApiKey: (): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('clearOpenAIApiKey'),
+
+  generateRulesWithOpenAI: (args: { model: string; ruleType: 'copyignore' | 'copyinclude'; instruction: string; currentText: string; filePaths: string[]; includeFileContents: boolean; folderStructure?: string }): Promise<any> =>
+    ipcRenderer.invoke('generateRulesWithOpenAI', args),
+
+  scanFolderForAI: (args: { folderPath: string; recursive: boolean }): Promise<any> =>
+    ipcRenderer.invoke('scanFolderForAI', args),
   
   scan: (args: ScanArgs): Promise<ScanResponse> =>
     ipcRenderer.invoke('scan', args),
@@ -173,5 +209,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onCopyError: (listener: CopyEventListener) => {
     ipcRenderer.on('copy:error', (_event, data) => listener(data));
     return () => ipcRenderer.removeListener('copy:error', listener);
+  },
+
+  // Menu action listener
+  onMenuAction: (listener: (data: { action: string; message?: string }) => void) => {
+    ipcRenderer.on('menu-action', (_event, data) => listener(data));
+    return () => ipcRenderer.removeListener('menu-action', listener);
   },
 });

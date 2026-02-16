@@ -113,6 +113,18 @@ type CopyEventListener = (data: any) => void;
 
 export interface ElectronAPI {
   selectFolder: (args: { kind: string }) => Promise<{ path: string | null }>;
+  selectDirectory: (args: { title: string }) => Promise<{ path: string | null }>;
+  selectFiles: (args: { title: string; multi: boolean }) => Promise<{ success: boolean; filePaths: string[]; error?: string }>;
+  getDefaultRuleFilePath: (args: { folderPath: string; ruleType: 'copyignore' | 'copyinclude' }) => Promise<{ filePath: string }>;
+  openRuleFileDialog: () => Promise<{ success: boolean; filePath?: string; ruleType?: 'copyignore' | 'copyinclude'; content?: string; error?: string }>;
+  showSaveRuleFileDialog: (args: { ruleType: 'copyignore' | 'copyinclude'; defaultDir?: string }) => Promise<{ filePath: string | null }>;
+  checkRuleFileSave: (args: { targetPath: string; ruleType: 'copyignore' | 'copyinclude' }) => Promise<{ success: boolean; targetExists?: boolean; otherTypeExists?: boolean; otherTypePath?: string | null; error?: string }>;
+  writeRuleFile: (args: { targetPath: string; ruleType: 'copyignore' | 'copyinclude'; content: string; overwriteExisting: boolean; allowConflict: boolean }) => Promise<{ success: boolean; error?: string }>;
+  hasOpenAIApiKey: () => Promise<{ hasKey: boolean }>;
+  setOpenAIApiKey: (args: { apiKey: string }) => Promise<{ success: boolean; error?: string }>;
+  clearOpenAIApiKey: () => Promise<{ success: boolean; error?: string }>;
+  generateRulesWithOpenAI: (args: { model: string; ruleType: 'copyignore' | 'copyinclude'; instruction: string; currentText: string; filePaths: string[]; includeFileContents: boolean; folderStructure?: string }) => Promise<{ success: boolean; generatedText?: string; error?: string }>;
+  scanFolderForAI: (args: { folderPath: string; recursive: boolean }) => Promise<{ success: boolean; formatted?: string; error?: string }>;
   scan: (args: ScanArgs) => Promise<ScanResponse>;
   listChildren: (args: ListChildrenArgs) => Promise<ListChildrenResponse>;
   explain: (args: ExplainArgs) => Promise<ExplainResponse>;
@@ -127,6 +139,7 @@ export interface ElectronAPI {
   onCopyLogLine: (listener: CopyEventListener) => () => void;
   onCopyDone: (listener: CopyEventListener) => () => void;
   onCopyError: (listener: CopyEventListener) => () => void;
+  onMenuAction: (listener: (data: { action: string; message?: string }) => void) => () => void;
 }
 
 declare global {

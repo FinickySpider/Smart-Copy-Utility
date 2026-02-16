@@ -2,6 +2,18 @@
 const electron = require("electron");
 electron.contextBridge.exposeInMainWorld("electronAPI", {
   selectFolder: (args) => electron.ipcRenderer.invoke("selectFolder", args),
+  selectDirectory: (args) => electron.ipcRenderer.invoke("selectDirectory", args),
+  selectFiles: (args) => electron.ipcRenderer.invoke("selectFiles", args),
+  getDefaultRuleFilePath: (args) => electron.ipcRenderer.invoke("getDefaultRuleFilePath", args),
+  openRuleFileDialog: () => electron.ipcRenderer.invoke("openRuleFileDialog"),
+  showSaveRuleFileDialog: (args) => electron.ipcRenderer.invoke("showSaveRuleFileDialog", args),
+  checkRuleFileSave: (args) => electron.ipcRenderer.invoke("checkRuleFileSave", args),
+  writeRuleFile: (args) => electron.ipcRenderer.invoke("writeRuleFile", args),
+  hasOpenAIApiKey: () => electron.ipcRenderer.invoke("hasOpenAIApiKey"),
+  setOpenAIApiKey: (args) => electron.ipcRenderer.invoke("setOpenAIApiKey", args),
+  clearOpenAIApiKey: () => electron.ipcRenderer.invoke("clearOpenAIApiKey"),
+  generateRulesWithOpenAI: (args) => electron.ipcRenderer.invoke("generateRulesWithOpenAI", args),
+  scanFolderForAI: (args) => electron.ipcRenderer.invoke("scanFolderForAI", args),
   scan: (args) => electron.ipcRenderer.invoke("scan", args),
   listChildren: (args) => electron.ipcRenderer.invoke("listChildren", args),
   explain: (args) => electron.ipcRenderer.invoke("explain", args),
@@ -34,6 +46,11 @@ electron.contextBridge.exposeInMainWorld("electronAPI", {
   onCopyError: (listener) => {
     electron.ipcRenderer.on("copy:error", (_event, data) => listener(data));
     return () => electron.ipcRenderer.removeListener("copy:error", listener);
+  },
+  // Menu action listener
+  onMenuAction: (listener) => {
+    electron.ipcRenderer.on("menu-action", (_event, data) => listener(data));
+    return () => electron.ipcRenderer.removeListener("menu-action", listener);
   }
 });
 //# sourceMappingURL=index.js.map

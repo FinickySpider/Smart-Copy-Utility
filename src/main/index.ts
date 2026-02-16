@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc';
+import { createApplicationMenu } from './menu';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -14,6 +15,9 @@ const createWindow = (): void => {
       nodeIntegration: false,
     },
   });
+
+  // Create application menu
+  createApplicationMenu(mainWindow);
 
   // In development, load from Vite dev server
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

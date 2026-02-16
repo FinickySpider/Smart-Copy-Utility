@@ -1,0 +1,96 @@
+[
+  {
+    "id": "node-standard",
+    "title": "Node / Web: common build + deps",
+    "category": "Node/Web",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      "node_modules/",
+      "dist/",
+      "build/",
+      ".next/",
+      ".turbo/",
+      ".vite/",
+      "coverage/",
+      ".cache/",
+      "npm-debug.log",
+      "yarn-debug.log",
+      "yarn-error.log"
+    ],
+    "notes": "Common Node.js dependency and build output folders."
+  },
+  {
+    "id": "dotnet-standard",
+    "title": ".NET: bin/obj and user files",
+    "category": ".NET",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      "bin/",
+      "obj/",
+      ".vs/",
+      "*.user",
+      "*.suo"
+    ],
+    "notes": "Typical .NET build outputs and IDE artifacts."
+  },
+  {
+    "id": "python-standard",
+    "title": "Python: venv + caches",
+    "category": "Python",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      ".venv/",
+      "venv/",
+      "__pycache__/",
+      ".pytest_cache/",
+      ".mypy_cache/",
+      ".ruff_cache/",
+      "*.pyc"
+    ],
+    "notes": "Virtual environments and interpreter caches."
+  },
+  {
+    "id": "java-standard",
+    "title": "Java: Maven/Gradle outputs",
+    "category": "Java",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      "target/",
+      "build/",
+      ".gradle/"
+    ],
+    "notes": "Build artifacts from common Java toolchains."
+  },
+  {
+    "id": "rust-standard",
+    "title": "Rust: target directory",
+    "category": "Rust",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      "target/"
+    ],
+    "notes": "Rust build output folder."
+  },
+  {
+    "id": "git-metadata",
+    "title": "Git metadata (usually keep out)",
+    "category": "General",
+    "appliesTo": "copyignore",
+    "snippetLines": [
+      ".git/"
+    ],
+    "notes": "If you don’t want Git history copied."
+  },
+  {
+    "id": "include-source-only",
+    "title": "Include only source (example)",
+    "category": "Examples",
+    "appliesTo": "copyinclude",
+    "snippetLines": [
+      "src/",
+      "README.md",
+      "package.json"
+    ],
+    "notes": "Example whitelist patterns. Adjust for your project."
+  }
+]

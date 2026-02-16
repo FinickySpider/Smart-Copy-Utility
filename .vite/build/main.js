@@ -1,5 +1,5 @@
 "use strict";
 require("electron");
 require("path");
-require("./index-CUBtw_ba.js");
+require("./index-BbFqN4QJ.js");
 //# sourceMappingURL=main.js.map

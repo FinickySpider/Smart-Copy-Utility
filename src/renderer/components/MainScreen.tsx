@@ -6,8 +6,10 @@ import { ConflictBanner } from './ConflictBanner';
 import { LogPanel } from './LogPanel';
 import { ProgressBar } from './ProgressBar';
 import { ThemeToggle } from './ThemeToggle';
+import { RulesScreen } from './RulesScreen';
 
 export function MainScreen(): React.ReactElement {
+  const [activeTab, setActiveTab] = useState<'copy' | 'rules'>('copy');
   const [sourcePath, setSourcePath] = useState<string | null>(null);
   const [destPath, setDestPath] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -74,6 +76,42 @@ export function MainScreen(): React.ReactElement {
       unsubError();
     };
   }, []);
+
+  // Handle menu actions
+  React.useEffect(() => {
+    const unsubMenuAction = window.electronAPI.onMenuAction((data: { action: string; message?: string }) => {
+      switch (data.action) {
+        case 'selectSourceFolder':
+          if (activeTab === 'copy') {
+            handleSelectFolder('source');
+          }
+          break;
+        case 'selectDestFolder':
+          if (activeTab === 'copy') {
+            handleSelectFolder('destination');
+          }
+          break;
+        case 'switchToCopyTab':
+          setActiveTab('copy');
+          break;
+        case 'switchToRulesTab':
+          setActiveTab('rules');
+          break;
+        case 'showAbout':
+          if (data.message) {
+            alert(data.message);
+          }
+          break;
+        // openRuleFile and saveRuleFile are handled by RulesScreen
+        default:
+          break;
+      }
+    });
+
+    return () => {
+      unsubMenuAction();
+    };
+  }, [activeTab]);
 
   // Helper to extract clean error message
   const getErrorMessage = (error: unknown): string => {
@@ -322,23 +360,61 @@ export function MainScreen(): React.ReactElement {
         Smart Copy Utility
       </h1>
 
-      {/* Folder Pickers */}
-      <div style={{ marginBottom: '24px' }}>
-        <FolderPicker
-          label="Source Folder"
-          kind="source"
-          path={sourcePath}
-          onSelect={handleSelectFolder}
-          hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
-        />
-        <FolderPicker
-          label="Destination Folder"
-          kind="destination"
-          path={destPath}
-          onSelect={handleSelectFolder}
-          hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
-        />
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+        <button
+          onClick={() => setActiveTab('copy')}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            border: `1px solid var(--border-color)`,
+            backgroundColor: activeTab === 'copy' ? 'var(--button-bg)' : 'var(--bg-secondary)',
+            color: activeTab === 'copy' ? 'var(--button-text)' : 'var(--text-primary)',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 700,
+          }}
+        >
+          Copy
+        </button>
+        <button
+          onClick={() => setActiveTab('rules')}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            border: `1px solid var(--border-color)`,
+            backgroundColor: activeTab === 'rules' ? 'var(--button-bg)' : 'var(--bg-secondary)',
+            color: activeTab === 'rules' ? 'var(--button-text)' : 'var(--text-primary)',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 700,
+          }}
+        >
+          Rules
+        </button>
       </div>
+
+      {activeTab === 'copy' ? (
+        <>
+          {/* Folder Pickers */}
+          <div style={{ marginBottom: '24px' }}>
+            <FolderPicker
+              label="Source Folder"
+              kind="source"
+              path={sourcePath}
+              onSelect={handleSelectFolder}
+              hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
+              disabled={scanning || copyStatus !== 'idle'}
+            />
+            <FolderPicker
+              label="Destination Folder"
+              kind="destination"
+              path={destPath}
+              onSelect={handleSelectFolder}
+              hasError={hasSameFolderError || isDestInsideSource || isSourceInsideDest}
+              disabled={scanning || copyStatus !== 'idle'}
+            />
+          </div>
 
       {/* Root-Only Mode Toggle */}
       <div style={{ marginBottom: '24px' }}>
@@ -381,6 +457,36 @@ export function MainScreen(): React.ReactElement {
           }}
         >
           {errorMessage}
+        </div>
+      )}
+
+      {/* Scanning Progress Indicator */}
+      {scanning && (
+        <div
+          style={{
+            padding: '12px 16px',
+            marginBottom: '16px',
+            backgroundColor: 'var(--bg-secondary)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+          <div
+            style={{
+              width: '20px',
+              height: '20px',
+              border: '3px solid var(--border-color)',
+              borderTop: '3px solid var(--button-preview)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
+          <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>
+            Scanning source folder and discovering rules...
+          </span>
         </div>
       )}
 
@@ -527,22 +633,26 @@ export function MainScreen(): React.ReactElement {
         </div>
       )}
 
-      {/* Two-column layout for tree and explain panel */}
-      {scanResult && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-          {/* Preview Tree */}
-          <TreeView
-            rootNode={scanResult.rootNode}
-            scanId={scanResult.scanId}
-            onNodeSelect={setSelectedNode}
-          />
+          {/* Two-column layout for tree and explain panel */}
+          {scanResult && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              {/* Preview Tree */}
+              <TreeView
+                rootNode={scanResult.rootNode}
+                scanId={scanResult.scanId}
+                onNodeSelect={setSelectedNode}
+              />
 
-          {/* Explain Panel */}
-          <ExplainPanel
-            scanId={scanResult.scanId}
-            selectedNode={selectedNode}
-          />
-        </div>
+              {/* Explain Panel */}
+              <ExplainPanel
+                scanId={scanResult.scanId}
+                selectedNode={selectedNode}
+              />
+            </div>
+          )}
+        </>
+      ) : (
+        <RulesScreen />
       )}
     </div>
   );
