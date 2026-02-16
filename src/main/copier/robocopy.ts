@@ -13,11 +13,13 @@ import { RuleMode } from '../rules/types';
  *
  * @param job - The job to convert to robocopy arguments
  * @param dryRun - If true, adds /L flag for list-only mode
+ * @param threads - Number of threads for multi-threaded copying (1-128, default 8)
  * @returns Array of command arguments for robocopy.exe
  */
 export function buildRobocopyArgs(
   job: RobocopyJob,
-  dryRun: boolean = false
+  dryRun: boolean = false,
+  threads: number = 8
 ): string[] {
   const args: string[] = [];
 
@@ -72,7 +74,7 @@ export function buildRobocopyArgs(
   // Common switches
   args.push('/R:3'); // Retry 3 times on failure
   args.push('/W:2'); // Wait 2 seconds between retries
-  args.push('/MT:8'); // Multi-threaded (8 threads)
+  args.push(`/MT:${Math.max(1, Math.min(128, threads))}`); // Multi-threaded (configurable)
   args.push('/NP'); // No progress (percentage)
   args.push('/NDL'); // No directory list
   args.push('/NS'); // No size

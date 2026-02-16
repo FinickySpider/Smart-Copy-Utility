@@ -123,6 +123,12 @@ export interface ElectronAPI {
   hasOpenAIApiKey: () => Promise<{ hasKey: boolean }>;
   setOpenAIApiKey: (args: { apiKey: string }) => Promise<{ success: boolean; error?: string }>;
   clearOpenAIApiKey: () => Promise<{ success: boolean; error?: string }>;
+  getRobocopyThreads: () => Promise<{ threads: number; error?: string }>;
+  setRobocopyThreads: (args: { threads: number }) => Promise<{ success: boolean; error?: string }>;
+  getScannerThreads: () => Promise<{ threads: number; error?: string }>;
+  setScannerThreads: (args: { threads: number }) => Promise<{ success: boolean; error?: string }>;
+  getLastUsedPaths: () => Promise<{ source?: string; dest?: string; error?: string }>;
+  setLastUsedPaths: (args: { source?: string; dest?: string }) => Promise<{ success: boolean; error?: string }>;
   generateRulesWithOpenAI: (args: { model: string; ruleType: 'copyignore' | 'copyinclude'; instruction: string; currentText: string; filePaths: string[]; includeFileContents: boolean; folderStructure?: string }) => Promise<{ success: boolean; generatedText?: string; error?: string }>;
   scanFolderForAI: (args: { folderPath: string; recursive: boolean }) => Promise<{ success: boolean; formatted?: string; error?: string }>;
   scan: (args: ScanArgs) => Promise<ScanResponse>;

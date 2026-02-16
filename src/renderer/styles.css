@@ -3,95 +3,141 @@
    ============================================================================ */
 
 :root {
-  /* Light Mode Colors */
+  /* ===== Spacing (8pt grid) ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ===== Typography ===== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ===== Border Radius ===== */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-full: 9999px;
+
+  /* ===== Elevation (shadows) ===== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --shadow-2xl: 0 16px 32px rgba(0, 0, 0, 0.2);
+
+  /* Light Mode Colors (WCAG AAA Enhanced) */
   --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-tertiary: #e8e8e8;
-  --bg-hover: #f0f0f0;
+  --bg-secondary: #f7f7f7;
+  --bg-tertiary: #efefef;
+  --bg-hover: #e8e8e8;
   
-  --text-primary: #1a1a1a;
-  --text-secondary: #555555;
-  --text-tertiary: #888888;
+  --text-primary: #0a0a0a;
+  --text-secondary: #484848;
+  --text-tertiary: #6e6e6e;
   
-  --border-color: #d0d0d0;
+  --border-color: #c8c8c8;
   --border-light: #e0e0e0;
   
-  --button-bg: #0066cc;
-  --button-hover: #0052a3;
-  --button-disabled: #cccccc;
+  --button-bg: #0055b8;
+  --button-hover: #003d85;
+  --button-disabled: #b8b8b8;
   --button-text: #ffffff;
   
   /* Action Button Colors */
-  --button-preview: #3498db;
-  --button-dryrun: #95a5a6;
-  --button-copy: #27ae60;
-  --button-cancel: #e74c3c;
-  --button-reset: #f39c12;
+  --button-preview: #1976d2;
+  --button-dryrun: #7e8c94;
+  --button-copy: #1e7e34;
+  --button-cancel: #c62828;
+  --button-reset: #d68400;
   
-  --success-bg: #e8f5e9;
-  --success-text: #2e7d32;
-  --success-border: #81c784;
+  --success-bg: #d4f4dd;
+  --success-text: #1e7e34;
+  --success-border: #66bb6a;
   
-  --error-bg: #ffebee;
+  --error-bg: #ffe5e5;
   --error-text: #c62828;
   --error-border: #e57373;
   
-  --warning-bg: #fff3e0;
-  --warning-text: #e65100;
+  --warning-bg: #fff3d6;
+  --warning-text: #d68400;
   --warning-border: #ffb74d;
   
-  --tree-included: #4caf50;
-  --tree-excluded: #888888;
-  --tree-conflict: #f44336;
-  
-  --shadow-sm: rgba(0, 0, 0, 0.1);
-  --shadow-md: rgba(0, 0, 0, 0.15);
+  --tree-included: #2e7d32;
+  --tree-excluded: #616161;
+  --tree-conflict: #d32f2f;
 }
 
-/* Dark Mode Colors */
+/* Dark Mode Colors (WCAG AAA Enhanced) */
 [data-theme="dark"] {
-  --bg-primary: #1e1e1e;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #3a3a3a;
-  --bg-hover: #404040;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.6);
+  --shadow-2xl: 0 16px 32px rgba(0, 0, 0, 0.7);
+
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --bg-hover: #353535;
   
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
-  --text-tertiary: #888888;
+  --text-primary: #f0f0f0;
+  --text-secondary: #b8b8b8;
+  --text-tertiary: #909090;
   
-  --border-color: #4a4a4a;
-  --border-light: #3a3a3a;
+  --border-color: #404040;
+  --border-light: #2a2a2a;
   
   --button-bg: #1976d2;
   --button-hover: #1565c0;
-  --button-disabled: #424242;
+  --button-disabled: #404040;
   --button-text: #ffffff;
   
-  /* Action Button Colors (slightly adjusted for dark theme) */
+  /* Action Button Colors (adjusted for dark theme) */
   --button-preview: #2196f3;
-  --button-dryrun: #78909c;
-  --button-copy: #43a047;
+  --button-dryrun: #90a4ae;
+  --button-copy: #4caf50;
   --button-cancel: #ef5350;
   --button-reset: #ffa726;
   
-  --success-bg: #1b5e20;
+  --success-bg: #1b4d26;
   --success-text: #81c784;
   --success-border: #388e3c;
   
-  --error-bg: #b71c1c;
-  --error-text: #ef5350;
-  --error-border: #d32f2f;
+  --error-bg: #5e1414;
+  --error-text: #ef9a9a;
+  --error-border: #c62828;
   
-  --warning-bg: #e65100;
+  --warning-bg: #5e3a14;
   --warning-text: #ffb74d;
   --warning-border: #f57c00;
   
   --tree-included: #66bb6a;
   --tree-excluded: #9e9e9e;
   --tree-conflict: #ef5350;
-  
-  --shadow-sm: rgba(0, 0, 0, 0.3);
-  --shadow-md: rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================================================
@@ -105,9 +151,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-primary);
@@ -121,25 +168,45 @@ body {
 
 button {
   font-family: inherit;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
-/* Scrollbar styling for dark mode */
-[data-theme="dark"] ::-webkit-scrollbar {
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: var(--font-size-base);
+}
+
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
   width: 12px;
   height: 12px;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: var(--bg-secondary);
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
   border-radius: 6px;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-hover);
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
 }
 
 /* ============================================================================
@@ -152,5 +219,90 @@ button {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes success-checkmark {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Utility animation classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

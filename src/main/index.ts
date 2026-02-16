@@ -2,19 +2,37 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { registerIpcHandlers } from './ipc';
 import { createApplicationMenu } from './menu';
+import { getWindowBounds, setWindowBounds } from './settings';
 
 let mainWindow: BrowserWindow | null = null;
 
-const createWindow = (): void => {
+const createWindow = async (): Promise<void> => {
+  // Restore window bounds from settings
+  const savedBounds = await getWindowBounds();
+  const bounds = savedBounds ?? { width: 1200, height: 800 };
+
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    x: bounds.x,
+    y: bounds.y,
+    width: bounds.width,
+    height: bounds.height,
     webPreferences: {
       preload: path.join(__dirname, 'index.js'),
       contextIsolation: true,
       nodeIntegration: false,
     },
   });
+
+  // Save window bounds when window is moved or resized
+  const saveBounds = () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      const bounds = mainWindow.getBounds();
+      setWindowBounds(bounds).catch(console.error);
+    }
+  };
+
+  mainWindow.on('resize', saveBounds);
+  mainWindow.on('move', saveBounds);
 
   // Create application menu
   createApplicationMenu(mainWindow);

@@ -7,13 +7,13 @@ Single source of truth. The agent starts here.
 Smart Copy Utility
 
 ## Active Phase
-- None — all planned phases complete
+(None - PHASE-06 complete)
 
 ## Active Sprint
-- None — SPRINT-07 complete
+(None - All sprints complete)
 
 ## In Progress
-- (none)
+(None - PHASE-06 complete)
 
 ## Phases
 - [PHASE-01: Foundation & Rule Engine](../phases/PHASE-01-foundation-and-rule-engine.md) — complete
@@ -21,6 +21,7 @@ Smart Copy Utility
 - [PHASE-03: Copy Engine & Execution](../phases/PHASE-03-copy-engine-and-execution.md) — complete
 - [PHASE-04: Polish & Hardening](../phases/PHASE-04-polish-and-hardening.md) — complete
 - [PHASE-05: Rule Authoring & AI Assist](../phases/PHASE-05-rule-authoring-and-ai-assist.md) — complete
+- [PHASE-06: Performance & Polish](../phases/PHASE-06-performance-and-polish.md) — complete
 
 ## Sprints
 - [SPRINT-01](../sprints/SPRINT-01.md) — complete (PHASE-01)
@@ -30,6 +31,10 @@ Smart Copy Utility
 - [SPRINT-05](../sprints/SPRINT-05.md) — complete (PHASE-04)
 - [SPRINT-06](../sprints/SPRINT-06.md) — complete (PHASE-05)
 - [SPRINT-07](../sprints/SPRINT-07.md) — complete (Quality of Life improvements)
+- [SPRINT-08](../sprints/SPRINT-08.md) — complete (PHASE-06)
+- [SPRINT-09](../sprints/SPRINT-09.md) — complete (PHASE-06)
+- [SPRINT-10](../sprints/SPRINT-10.md) — complete (PHASE-06)
+- [SPRINT-11](../sprints/SPRINT-11.md) — complete (PHASE-06)
 
 ## Features
 - [FEAT-001: Electron project scaffolding](../features/FEAT-001-electron-project-scaffolding.md) — complete (SPRINT-01)
@@ -49,6 +54,15 @@ Smart Copy Utility
 - [FEAT-015: Root-rules-only mode toggle](../features/FEAT-015-root-rules-only-mode-toggle.md) — complete (SPRINT-04)
 - [FEAT-016: Path safety checks](../features/FEAT-016-path-safety-checks.md) — complete (SPRINT-04)
 - [FEAT-017: Enhanced error handling](../features/FEAT-017-enhanced-error-handling.md) — complete (SPRINT-04)
+- [FEAT-023: Multi-threaded Robocopy](../features/FEAT-023-multi-threaded-robocopy.md) — complete (SPRINT-08)
+- [FEAT-024: Worker Thread Scanning](../features/FEAT-024-worker-thread-scanning.md) — complete (SPRINT-08)
+- [FEAT-025: Settings Tab](../features/FEAT-025-settings-tab.md) — complete (SPRINT-09)
+- [FEAT-026: User Preferences Persistence](../features/FEAT-026-user-preferences-persistence.md) — complete (SPRINT-09)
+- [FEAT-027: Radix UI Integration](../features/FEAT-027-radix-ui-integration.md) — complete (SPRINT-10)
+- [FEAT-028: Design System & CSS Variables](../features/FEAT-028-design-system-and-css-variables.md) — complete (SPRINT-10)
+- [FEAT-029: Component Refinements](../features/FEAT-029-component-refinements.md) — complete (SPRINT-11)
+- [FEAT-030: Micro-interactions & Animations](../features/FEAT-030-micro-interactions-and-animations.md) — complete (SPRINT-11)
+- [FEAT-031: Empty States & Error Messages](../features/FEAT-031-empty-states-and-error-messages.md) — complete (SPRINT-11)
 - [FEAT-018: User documentation](../features/FEAT-018-user-documentation.md) — complete (SPRINT-04)
 - [FEAT-019: Rule File Editor + Snippet Library](../features/FEAT-019-rule-file-editor-and-library.md) — complete (SPRINT-06)
 - [FEAT-020: OpenAI Rule Generator](../features/FEAT-020-openai-rule-generator.md) — complete (SPRINT-06)

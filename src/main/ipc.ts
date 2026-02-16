@@ -10,7 +10,7 @@ import { CopyExecutor } from './copier/executor';
 import { JobPlanOptions } from './copier/types';
 import path from 'path';
 import fs from 'fs/promises';
-import { clearOpenAIApiKey, getOpenAIApiKey, hasOpenAIApiKey, setOpenAIApiKey } from './settings';
+import { clearOpenAIApiKey, getOpenAIApiKey, hasOpenAIApiKey, setOpenAIApiKey, getRobocopyThreads, setRobocopyThreads, getScannerThreads, setScannerThreads, getLastUsedPaths, setLastUsedPaths } from './settings';
 import { generateRulesWithOpenAI, RuleType } from './openai';
 import { scanFolder, formatFolderStructure } from './folderScanner';
 
@@ -251,6 +251,59 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('clearOpenAIApiKey', async () => {
     try {
       await clearOpenAIApiKey();
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: String(error) };
+    }
+  });
+
+  // Performance settings
+  ipcMain.handle('getRobocopyThreads', async () => {
+    try {
+      return { threads: await getRobocopyThreads() };
+    } catch (error) {
+      return { threads: 8, error: String(error) };
+    }
+  });
+
+  ipcMain.handle('setRobocopyThreads', async (_event, args: { threads: number }) => {
+    try {
+      await setRobocopyThreads(args.threads);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: String(error) };
+    }
+  });
+
+  ipcMain.handle('getScannerThreads', async () => {
+    try {
+      return { threads: await getScannerThreads() };
+    } catch (error) {
+      return { threads: Math.max(1, Math.floor(require('os').cpus().length / 2)), error: String(error) };
+    }
+  });
+
+  ipcMain.handle('setScannerThreads', async (_event, args: { threads: number }) => {
+    try {
+      await setScannerThreads(args.threads);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: String(error) };
+    }
+  });
+
+  // Last used paths
+  ipcMain.handle('getLastUsedPaths', async () => {
+    try {
+      return await getLastUsedPaths();
+    } catch (error) {
+      return { source: undefined, dest: undefined, error: String(error) };
+    }
+  });
+
+  ipcMain.handle('setLastUsedPaths', async (_event, args: { source?: string; dest?: string }) => {
+    try {
+      await setLastUsedPaths(args.source, args.dest);
       return { success: true };
     } catch (error) {
       return { success: false, error: String(error) };

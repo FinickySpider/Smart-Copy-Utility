@@ -10,6 +10,7 @@ import { EventEmitter } from 'events';
 import { buildJobPlan } from './jobPlan';
 import { buildRobocopyArgs, isRobocopySuccess } from './robocopy';
 import { JobPlanOptions, CopyStatus } from './types';
+import { getRobocopyThreads } from '../settings';
 
 /** Events emitted during copy execution. */
 export interface CopyEvents {
@@ -118,8 +119,9 @@ export class CopyExecutor extends EventEmitter {
    * Executes a single robocopy job and returns the exit code.
    */
   private async executeJob(job: any): Promise<number> {
-    return new Promise((resolve, reject) => {
-      const args = buildRobocopyArgs(job, false);
+    return new Promise(async (resolve, reject) => {
+      const threads = await getRobocopyThreads();
+      const args = buildRobocopyArgs(job, false, threads);
 
       this.emit('logLine', `Executing: robocopy ${args.join(' ')}`);
 

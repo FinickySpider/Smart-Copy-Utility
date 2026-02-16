@@ -150,6 +150,24 @@ contextBridge.exposeInMainWorld('electronAPI', {
   clearOpenAIApiKey: (): Promise<{ success: boolean; error?: string }> =>
     ipcRenderer.invoke('clearOpenAIApiKey'),
 
+  getRobocopyThreads: (): Promise<{ threads: number; error?: string }> =>
+    ipcRenderer.invoke('getRobocopyThreads'),
+
+  setRobocopyThreads: (args: { threads: number }): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('setRobocopyThreads', args),
+
+  getScannerThreads: (): Promise<{ threads: number; error?: string }> =>
+    ipcRenderer.invoke('getScannerThreads'),
+
+  setScannerThreads: (args: { threads: number }): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('setScannerThreads', args),
+
+  getLastUsedPaths: (): Promise<{ source?: string; dest?: string; error?: string }> =>
+    ipcRenderer.invoke('getLastUsedPaths'),
+
+  setLastUsedPaths: (args: { source?: string; dest?: string }): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke('setLastUsedPaths', args),
+
   generateRulesWithOpenAI: (args: { model: string; ruleType: 'copyignore' | 'copyinclude'; instruction: string; currentText: string; filePaths: string[]; includeFileContents: boolean; folderStructure?: string }): Promise<any> =>
     ipcRenderer.invoke('generateRulesWithOpenAI', args),
 

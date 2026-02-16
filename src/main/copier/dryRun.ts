@@ -9,6 +9,7 @@ import { spawn } from 'child_process';
 import { buildJobPlan } from './jobPlan';
 import { buildRobocopyArgs, isRobocopySuccess } from './robocopy';
 import { DryRunReport, JobPlanOptions } from './types';
+import { getRobocopyThreads } from '../settings';
 
 /**
  * Executes a dry run of a copy operation.
@@ -49,9 +50,11 @@ export async function dryRun(
   let totalFiles = 0;
   let totalBytes = 0;
 
+  const threads = await getRobocopyThreads();
+
   for (const job of plan.jobs) {
     try {
-      const args = buildRobocopyArgs(job, true);
+      const args = buildRobocopyArgs(job, true, threads);
       const output = await executeRobocopy(args);
 
       // Parse robocopy output for file/byte counts

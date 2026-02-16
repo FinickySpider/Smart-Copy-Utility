@@ -7,6 +7,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { Worker } from 'worker_threads';
 import { v4 as uuidv4 } from 'uuid';
 import {
   TreeNode,
@@ -22,6 +23,7 @@ import {
   deriveChildContext,
 } from '../rules';
 import { ScanResult, ScanStats, ScanArgs, ScanResponse } from './types';
+import { getScannerThreads } from '../settings';
 
 // Global cache of scan results keyed by scanId
 const scanCache = new Map<string, ScanResult>();
@@ -59,8 +61,11 @@ export async function scan(args: ScanArgs): Promise<ScanResponse> {
   const ruleFilesByDir = new Map<string, RuleFileRecord[]>();
   const contextCache = new Map<string, RuleContext>();
 
-  // Walk the tree and discover all rule files
-  await walkAndIndex(source, ruleFilesByDir, stats, rootOnly);
+  // Get scanner thread count from settings
+  const scannerThreads = await getScannerThreads();
+
+  // Walk the tree and discover all rule files (using parallel workers)
+  await walkAndIndexParallel(source, ruleFilesByDir, stats, rootOnly, scannerThreads);
 
   // Build the root node
   const rootNode = await buildRootNode(
@@ -95,9 +100,125 @@ export async function scan(args: ScanArgs): Promise<ScanResponse> {
 }
 
 /**
- * Walks the directory tree and indexes all rule files by directory path.
+ * Walks the directory tree in parallel using worker threads.
+ * Partitions the root directory's immediate children among workers.
  */
-async function walkAndIndex(
+async function walkAndIndexParallel(
+  dirPath: string,
+  ruleFilesByDir: Map<string, RuleFileRecord[]>,
+  stats: ScanStats,
+  rootOnly: boolean,
+  maxWorkers: number
+): Promise<void> {
+  // Scan root directory first (synchronously)
+  stats.directoriesScanned++;
+  const rootRuleFiles = await findRuleFilesInDir(dirPath);
+  if (rootRuleFiles.length > 0) {
+    ruleFilesByDir.set(dirPath, rootRuleFiles);
+    stats.ruleFilesFound += rootRuleFiles.length;
+  }
+
+  // Get immediate subdirectories
+  let subdirs: string[] = [];
+  try {
+    const entries = await fs.readdir(dirPath, { withFileTypes: true });
+    subdirs = entries
+      .filter((e) => e.isDirectory())
+      .map((e) => path.join(dirPath, e.name));
+  } catch {
+    // No subdirectories or unreadable
+    return;
+  }
+
+  if (subdirs.length === 0) {
+    return;
+  }
+
+  // If only one subdir or in test mode, fall back to sequential
+  if (subdirs.length === 1 || process.env.NODE_ENV === 'test' || process.env.VITEST) {
+    for (const subdir of subdirs) {
+      await walkAndIndexSequential(subdir, ruleFilesByDir, stats, rootOnly, 1);
+    }
+    return;
+  }
+
+  // Process subdirectories in batches using worker pool
+  const workerPath = path.join(__dirname, 'scanner-worker.js');
+  const batchSize = maxWorkers;
+
+  for (let i = 0; i < subdirs.length; i += batchSize) {
+    const batch = subdirs.slice(i, i + batchSize);
+    const promises = batch.map((subtreePath) => runWorker(workerPath, subtreePath, rootOnly));
+    const results = await Promise.all(promises);
+
+    // Merge results
+    for (const result of results) {
+      if (result.error) {
+        // Log error but continue (partial scan is better than nothing)
+        console.error(`Scanner worker error for ${result.subtreePath}: ${result.error}`);
+        continue;
+      }
+
+      for (const [dirPathKey, ruleFiles] of result.ruleFilesByDir) {
+        ruleFilesByDir.set(dirPathKey, ruleFiles);
+      }
+      stats.directoriesScanned += result.directoriesScanned;
+      stats.ruleFilesFound += result.ruleFilesFound;
+    }
+  }
+}
+
+/**
+ * Run a single worker thread to scan a subtree.
+ */
+function runWorker(
+  workerPath: string,
+  subtreePath: string,
+  rootOnly: boolean
+): Promise<{
+  subtreePath: string;
+  ruleFilesByDir: [string, RuleFileRecord[]][];
+  directoriesScanned: number;
+  ruleFilesFound: number;
+  error?: string;
+}> {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(workerPath, {
+      workerData: { subtreePath, rootOnly },
+    });
+
+    worker.on('message', (message: any) => {
+      resolve({ ...message, subtreePath });
+    });
+
+    worker.on('error', (error) => {
+      resolve({
+        subtreePath,
+        ruleFilesByDir: [],
+        directoriesScanned: 0,
+        ruleFilesFound: 0,
+        error: error.message,
+      });
+    });
+
+    worker.on('exit', (code) => {
+      if (code !== 0) {
+        resolve({
+          subtreePath,
+          ruleFilesByDir: [],
+          directoriesScanned: 0,
+          ruleFilesFound: 0,
+          error: `Worker stopped with exit code ${code}`,
+        });
+      }
+    });
+  });
+}
+
+/**
+ * Walks the directory tree sequentially (fallback or small trees).
+ */
+async function walkAndIndexSequential(
   dirPath: string,
   ruleFilesByDir: Map<string, RuleFileRecord[]>,
   stats: ScanStats,
@@ -121,7 +242,7 @@ async function walkAndIndex(
     for (const entry of entries) {
       if (entry.isDirectory()) {
         const childPath = path.join(dirPath, entry.name);
-        await walkAndIndex(childPath, ruleFilesByDir, stats, rootOnly, depth + 1);
+        await walkAndIndexSequential(childPath, ruleFilesByDir, stats, rootOnly, depth + 1);
       }
     }
   } catch {

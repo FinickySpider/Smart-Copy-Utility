@@ -7,9 +7,10 @@ import { LogPanel } from './LogPanel';
 import { ProgressBar } from './ProgressBar';
 import { ThemeToggle } from './ThemeToggle';
 import { RulesScreen } from './RulesScreen';
+import { SettingsScreen } from './SettingsScreen';
 
 export function MainScreen(): React.ReactElement {
-  const [activeTab, setActiveTab] = useState<'copy' | 'rules'>('copy');
+  const [activeTab, setActiveTab] = useState<'copy' | 'rules' | 'settings'>('copy');
   const [sourcePath, setSourcePath] = useState<string | null>(null);
   const [destPath, setDestPath] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -27,6 +28,30 @@ export function MainScreen(): React.ReactElement {
   const [totalJobs, setTotalJobs] = useState(0);
   const [dryRunReport, setDryRunReport] = useState<any>(null);
   const [rootOnly, setRootOnly] = useState(false);
+
+  // Load last used paths on mount
+  React.useEffect(() => {
+    async function loadLastUsedPaths() {
+      try {
+        const paths = await window.electronAPI.getLastUsedPaths();
+        if (paths.source) setSourcePath(paths.source);
+        if (paths.dest) setDestPath(paths.dest);
+      } catch (error) {
+        console.error('Failed to load last used paths:', error);
+      }
+    }
+    loadLastUsedPaths();
+  }, []);
+
+  // Save paths when they change
+  React.useEffect(() => {
+    if (sourcePath || destPath) {
+      window.electronAPI.setLastUsedPaths({ 
+        source: sourcePath ?? undefined, 
+        dest: destPath ?? undefined 
+      }).catch(console.error);
+    }
+  }, [sourcePath, destPath]);
 
   // Set up copy event listeners
   React.useEffect(() => {
@@ -392,6 +417,21 @@ export function MainScreen(): React.ReactElement {
         >
           Rules
         </button>
+        <button
+          onClick={() => setActiveTab('settings')}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            border: `1px solid var(--border-color)`,
+            backgroundColor: activeTab === 'settings' ? 'var(--button-bg)' : 'var(--bg-secondary)',
+            color: activeTab === 'settings' ? 'var(--button-text)' : 'var(--text-primary)',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 700,
+          }}
+        >
+          Settings
+        </button>
       </div>
 
       {activeTab === 'copy' ? (
@@ -651,8 +691,10 @@ export function MainScreen(): React.ReactElement {
             </div>
           )}
         </>
-      ) : (
+      ) : activeTab === 'rules' ? (
         <RulesScreen />
+      ) : (
+        <SettingsScreen />
       )}
     </div>
   );
